@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'BBH Hegarty';
+  src: url('/fonts/BBHHegarty-Regular.ttf') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans-VariableFont_opsz\,wght.ttf') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-bg: #500000;
+  --color-surface: #6B0000;
+  --color-accent: #E8C99A;
+
+  --font-hegarty: 'BBH Hegarty', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+body {
+  background-color: #500000;
+  --current-bg: #500000;
+}
+
+body:has(.project-page) {
+  overflow: hidden;
+}
+
+.noise::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 100;
+}
