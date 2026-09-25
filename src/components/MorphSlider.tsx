@@ -295,11 +295,7 @@ class MorphEngine {
   private boundLoop: (t: number) => void;
   private boundContextLost: (e: Event) => void;
 
-  private current: number;
   private requestedIndex: number;
-
-  private animating = false;
-  private dragging = false;
 
   constructor(container: HTMLElement, config: EngineConfig) {
     this.container = container;
@@ -418,6 +414,26 @@ class MorphEngine {
 
   private prepareTarget(target: number): number {
   const dir = target > this.current ? 1 : -1;
+
+  this.program.uniforms.tCurrent.value =
+    this.textures[this.current];
+
+  this.program.uniforms.uCurrentSize.value =
+    this.sizes[this.current];
+
+  this.program.uniforms.tNext.value =
+    this.textures[target];
+
+  this.program.uniforms.uNextSize.value =
+    this.sizes[target];
+
+  this.program.uniforms.uDir.value = dir;
+
+  return target;
+}
+
+private prepareNext(dir: number): number {
+  const target = this.wrap(this.current + dir);
 
   this.program.uniforms.tCurrent.value =
     this.textures[this.current];
@@ -885,7 +901,7 @@ const handleGoTo = useCallback(
           role="tablist"
           aria-label="Slides"
         >
-          {items.map((item, i) => (
+          {items.map((_, i) => (
             <button
               key={i}
               type="button"
