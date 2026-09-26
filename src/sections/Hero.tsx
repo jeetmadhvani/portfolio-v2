@@ -6,6 +6,8 @@ const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
+  const roleRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const wordRefs = useRef<HTMLSpanElement[]>([]);
   const metaLineRefs = useRef<HTMLSpanElement[]>([]);
@@ -25,8 +27,15 @@ const Hero = () => {
   useEffect(() => {
     const ctx = gsap.context(() => {
       const nav = navRef.current;
+      const role = roleRef.current;
+      const scroll = scrollRef.current;
 
-      if (!nav || !wordRefs.current.length || !metaLineRefs.current.length) {
+      if (
+        !nav ||
+        !role ||
+        !wordRefs.current.length ||
+        !metaLineRefs.current.length
+      ) {
         return;
       }
 
@@ -46,6 +55,18 @@ const Hero = () => {
         opacity: 0,
         clipPath: "inset(0 100% 0 0)",
       });
+
+      gsap.set(role, {
+        opacity: 0,
+        y: 12,
+      });
+
+      if (scroll) {
+        gsap.set(scroll, {
+          opacity: 0,
+          clipPath: "inset(0 100% 0 0)",
+        });
+      }
 
       // Entrance animation
       const tl = gsap.timeline();
@@ -77,6 +98,26 @@ const Hero = () => {
             ease: "power2.out",
           },
           "<",
+        )
+        .to(
+          role,
+          {
+            opacity: 0.6,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out",
+          },
+          "-=0.15",
+        )
+        .to(
+          scroll,
+          {
+            opacity: 0.5,
+            clipPath: "inset(0 0% 0 0)",
+            duration: 0.5,
+            ease: "power2.out",
+          },
+          "-=0.2",
         );
     }, heroRef);
 
@@ -87,15 +128,15 @@ const Hero = () => {
     <div
       ref={heroRef}
       className="
-  relative
-  h-screen
-  flex
-  flex-col
-  px-8
-  md:px-16
-  py-4
-  md:py-8
-"
+        relative
+        h-screen
+        flex
+        flex-col
+        px-8
+        md:px-16
+        py-4
+        md:py-8
+      "
     >
       {/* Nav */}
       <div ref={navRef}>
@@ -180,31 +221,86 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Headline */}
-      <div className="mt-auto font-hegarty text-[clamp(36px,7.5vw,130px)] leading-none">
-        <div className="overflow-hidden">
-          <span ref={addWordRef} className="inline-block">
-            I
-          </span>{" "}
-          <span ref={addWordRef} className="inline-block">
-            LIKE
-          </span>{" "}
-          <span ref={addWordRef} className="inline-block">
-            MAKING
-          </span>
+      {/* Headline + role */}
+      <div
+        className="
+    mt-auto
+    pb-6
+    md:pb-0
+  "
+      >
+        <div
+          className="
+      font-hegarty
+      text-[clamp(36px,7.5vw,130px)]
+      leading-none
+    "
+        >
+          <div className="overflow-hidden">
+            <span ref={addWordRef} className="inline-block">
+              I
+            </span>{" "}
+            <span ref={addWordRef} className="inline-block">
+              LIKE
+            </span>{" "}
+            <span ref={addWordRef} className="inline-block">
+              MAKING
+            </span>
+          </div>
+
+          <div className="overflow-hidden">
+            <span ref={addWordRef} className="inline-block">
+              THINGS
+            </span>{" "}
+            <span ref={addWordRef} className="inline-block">
+              FEEL
+            </span>{" "}
+            <span ref={addWordRef} className="inline-block">
+              GOOD.
+            </span>
+          </div>
         </div>
 
-        <div className="overflow-hidden">
-          <span ref={addWordRef} className="inline-block">
-            THINGS
-          </span>{" "}
-          <span ref={addWordRef} className="inline-block">
-            FEEL
-          </span>{" "}
-          <span ref={addWordRef} className="inline-block">
-            GOOD.
-          </span>
+        {/* Desktop only */}
+        <div
+          ref={roleRef}
+          className="
+      hidden
+      md:block
+      mt-5
+      md:mt-6
+      font-body
+      text-[11px]
+      md:text-xs
+      tracking-[0.16em]
+      lowercase
+      whitespace-nowrap
+      opacity-70
+    "
+        >
+          DESIGN ENGINEER · WEB DESIGN · FRONTEND
         </div>
+      </div>
+
+      {/* Desktop scroll indicator */}
+      <div
+        ref={scrollRef}
+        className="
+    hidden
+    md:block
+    absolute
+    bottom-8
+    right-8
+    md:right-16
+    font-body
+    text-[10px]
+    tracking-[0.2em]
+    lowercase
+    opacity-50
+    whitespace-nowrap
+  "
+      >
+        scroll to explore ↓
       </div>
     </div>
   );

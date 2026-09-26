@@ -6,12 +6,15 @@ interface SectionCTAProps {
   href?: string;
   targetBlank?: boolean;
   className?: string;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 const SectionCTA = ({
   text,
   href,
   targetBlank = false,
+  className = "",
+  onClick,
 }: SectionCTAProps) => {
   const [isHover, setIsHover] = useState(false);
 
@@ -22,27 +25,29 @@ const SectionCTA = ({
       rel={targetBlank ? "noopener noreferrer" : undefined}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
-      className="
-        group
-        relative
-        overflow-hidden
-        border-y
-        border-white/30
-        text-2xl
-        opacity-60
-        py-4
-        px-4
-        cursor-pointer
-        flex
-        justify-between
-        pointer-events-auto
-        transition-[padding,color,opacity]
-        duration-300
-        ease-out
-        hover:px-8
-        hover:text-black
-        hover:opacity-80
-      "
+      onClick={onClick}
+      className={`
+  group
+  relative
+  overflow-hidden
+  border-y
+  border-white/30
+  text-2xl
+  opacity-60
+  py-4
+  px-4
+  cursor-pointer
+  flex
+  justify-between
+  pointer-events-auto
+  transition-[padding,color,opacity]
+  duration-300
+  ease-out
+  hover:px-8
+  hover:text-black
+  hover:opacity-80
+  ${className}
+`}
     >
       {/* Bottom-up hover fill */}
       <span
