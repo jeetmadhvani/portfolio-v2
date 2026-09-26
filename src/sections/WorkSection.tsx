@@ -287,7 +287,7 @@ const WorkSection = () => {
                   opacity: 0.5,
                 }}
               >
-                {activeProject.visual.label}
+                {/* {activeProject.visual.label} */}
               </div>
 
               <MorphSlider
@@ -547,7 +547,7 @@ const WorkSection = () => {
                       opacity: 0.5,
                     }}
                   >
-                    {project.visual.label}
+                    {/* {project.visual.label} */}
                   </div>
 
                   <img

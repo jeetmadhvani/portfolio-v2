@@ -123,44 +123,44 @@ const Footer = () => {
           </h2>
 
           {/* CTAs */}
-          <div ref={linksRef} className="flex flex-col">
-            {/* Email */}
-            <SectionCTA
-              text="contact@jeetmadhvani.com"
-              href="mailto:contact@jeetmadhvani.com"
-              className="
-                text-[clamp(16px,2vw,24px)]
-                py-3 md:py-4
-              "
-            />
+          <div className="flex flex-col">
+  {/* Email / primary CTA */}
+  <SectionCTA
+    text="jeetmadhvani@gmail.com"
+    href="mailto:contact@jeetmadhvani.com"
+    className="
+      text-[clamp(16px,2vw,24px)]
+      py-3 md:py-4
+    "
+  />
 
-            {/* Socials */}
-            <div className="grid grid-cols-2">
-              <div className="border-r border-white/30">
-                <SectionCTA
-                  text="LinkedIn"
-                  href="https://www.linkedin.com/in/jeet-madhvani-809724380/"
-                  targetBlank
-                  className="
-                    text-[clamp(16px,2vw,24px)]
-                    py-3 md:py-4
-                  "
-                />
-              </div>
+  {/* Socials */}
+  <div className="grid grid-cols-1 md:grid-cols-2">
+    <div className="md:border-r md:border-white/30">
+      <SectionCTA
+        text="LinkedIn"
+        href="https://www.linkedin.com/in/jeet-madhvani-809724380/"
+        targetBlank
+        className="
+          text-[clamp(16px,2vw,24px)]
+          py-3 md:py-4
+        "
+      />
+    </div>
 
-              <div>
-                <SectionCTA
-                  text="GitHub"
-                  href="https://github.com/jeetmadhvani"
-                  targetBlank
-                  className="
-                    text-[clamp(16px,2vw,24px)]
-                    py-3 md:py-4
-                  "
-                />
-              </div>
-            </div>
-          </div>
+    <div>
+      <SectionCTA
+        text="GitHub"
+        href="https://github.com/jeetmadhvani"
+        targetBlank
+        className="
+          text-[clamp(16px,2vw,24px)]
+          py-3 md:py-4
+        "
+      />
+    </div>
+  </div>
+</div>
         </div>
       </div>
     </footer>

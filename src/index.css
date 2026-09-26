@@ -24,13 +24,18 @@
   --font-body: 'DM Sans', sans-serif;
 }
 
+html,
 body {
   background-color: #500000;
+}
+
+body {
   --current-bg: #500000;
 }
 
 body:has(.project-page) {
   overflow: hidden;
+  background-color: #0A0A0A;
 }
 
 .noise::after {

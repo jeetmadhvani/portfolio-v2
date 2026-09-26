@@ -52,46 +52,44 @@ const AboutSection = () => {
         </Reveal>
 
         {/* CTA + SOCIALS */}
-        <div className="flex flex-col">
-          {/* PRIMARY CTA */}
-          <SectionCTA
-            text="Let's work together."
-            href="mailto:contact@jeetmadhvani.com"
-            className="
+       <div className="flex flex-col">
+  {/* Email / primary CTA */}
+  <SectionCTA
+    text="Let's work together."
+    href="mailto:contact@jeetmadhvani.com"
+    className="
       text-[clamp(16px,2vw,24px)]
       py-3 md:py-4
     "
-          />
+  />
 
-          {/* SOCIALS */}
-          <div className="grid grid-cols-2">
-            {/* LINKEDIN */}
-            <div className="border-r border-white/30">
-              <SectionCTA
-                text="LinkedIn"
-                href="https://www.linkedin.com/in/jeet-madhvani-809724380/"
-                targetBlank
-                className="
+  {/* Socials */}
+  <div className="grid grid-cols-1 md:grid-cols-2">
+    <div className="md:border-r md:border-white/30">
+      <SectionCTA
+        text="LinkedIn"
+        href="https://www.linkedin.com/in/jeet-madhvani-809724380/"
+        targetBlank
+        className="
           text-[clamp(16px,2vw,24px)]
           py-3 md:py-4
         "
-              />
-            </div>
+      />
+    </div>
 
-            {/* GITHUB */}
-            <div>
-              <SectionCTA
-                text="GitHub"
-                href="https://github.com/jeetmadhvani"
-                targetBlank
-                className="
+    <div>
+      <SectionCTA
+        text="GitHub"
+        href="https://github.com/jeetmadhvani"
+        targetBlank
+        className="
           text-[clamp(16px,2vw,24px)]
           py-3 md:py-4
         "
-              />
-            </div>
-          </div>
-        </div>
+      />
+    </div>
+  </div>
+</div>
 
         {/* DETAILS */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-8">

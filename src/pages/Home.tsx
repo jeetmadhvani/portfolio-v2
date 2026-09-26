@@ -12,6 +12,57 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
   useEffect(() => {
+    const themeColor = document.querySelector(
+      'meta[name="theme-color"]',
+    ) as HTMLMetaElement | null;
+
+    if (!themeColor) return;
+
+    const updateThemeColor = () => {
+      const x = window.innerWidth / 2;
+      const y = window.innerHeight / 2;
+
+      const element = document.elementFromPoint(x, y);
+
+      const section = element?.closest<HTMLElement>("[data-bg]");
+
+      if (!section) return;
+
+      const color = section.dataset.bg;
+
+      if (color && themeColor.content !== color) {
+        themeColor.content = color;
+      }
+    };
+
+    updateThemeColor();
+
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (ticking) return;
+
+      ticking = true;
+
+      requestAnimationFrame(() => {
+        updateThemeColor();
+        ticking = false;
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    window.addEventListener("resize", updateThemeColor);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", updateThemeColor);
+    };
+  }, []);
+
+  useEffect(() => {
     const ROW_COUNT = 8;
     const INITIAL_BG = "#500000";
 
@@ -189,96 +240,93 @@ const Home = () => {
     let navBusy = false;
 
     const handleNavTransition = (event: Event) => {
-  if (navBusy) return;
+      if (navBusy) return;
 
-  const customEvent =
-    event as CustomEvent<{ id: string }>;
+      const customEvent = event as CustomEvent<{ id: string }>;
 
-  const { id } = customEvent.detail;
+      const { id } = customEvent.detail;
 
-  if (!id) return;
+      if (!id) return;
 
-  const target = document.querySelector<HTMLElement>(id);
+      const target = document.querySelector<HTMLElement>(id);
 
-  if (!target) return;
+      if (!target) return;
 
-  navBusy = true;
-  navTimeline?.kill();
+      navBusy = true;
+      navTimeline?.kill();
 
-  const bg = target.dataset.bg || INITIAL_BG;
+      const bg = target.dataset.bg || INITIAL_BG;
 
-  navRows.forEach((row) => {
-    row.style.backgroundColor = bg;
-  });
+      navRows.forEach((row) => {
+        row.style.backgroundColor = bg;
+      });
 
-  // Start completely open
-  gsap.set(navRows, {
-    scaleY: 0,
-    transformOrigin: "bottom center",
-  });
+      // Start completely open
+      gsap.set(navRows, {
+        scaleY: 0,
+        transformOrigin: "bottom center",
+      });
 
-  navTimeline = gsap.timeline();
+      navTimeline = gsap.timeline();
 
-  // CLOSE THE SCREEN
-  navTimeline.to(navRows, {
-    scaleY: 1,
-    duration: 0.9,
-    ease: "power3.inOut",
-    stagger: {
-      each: 0.06,
-      from: "end",
-    },
+      // CLOSE THE SCREEN
+      navTimeline.to(navRows, {
+        scaleY: 1,
+        duration: 0.9,
+        ease: "power3.inOut",
+        stagger: {
+          each: 0.06,
+          from: "end",
+        },
 
-    // NOTHING moves before this finishes
-    onComplete: () => {
-  // Wait until the screen is fully covered
-  setTimeout(() => {
-    const targetY =
-      target.getBoundingClientRect().top +
-      window.scrollY;
+        // NOTHING moves before this finishes
+        onComplete: () => {
+          // Wait until the screen is fully covered
+          setTimeout(() => {
+            const targetY = target.getBoundingClientRect().top + window.scrollY;
 
-    window.scrollTo({
-      top: targetY,
-      behavior: "auto",
-    });
+            window.scrollTo({
+              top: targetY,
+              behavior: "auto",
+            });
 
-    document.body.style.backgroundColor = bg;
-    document.body.style.setProperty(
-      "--current-bg",
-      bg,
-    );
+            document.body.style.backgroundColor = bg;
+            document.body.style.setProperty("--current-bg", bg);
 
-    ScrollTrigger.refresh();
-  }, 650);
-},
-  });
+            ScrollTrigger.refresh();
+          }, 650);
+        },
+      });
 
-  // Keep everything covered while the new position settles
-  navTimeline.to({}, {
-    duration: 0.5,
-  });
+      // Keep everything covered while the new position settles
+      navTimeline.to(
+        {},
+        {
+          duration: 0.5,
+        },
+      );
 
-  // OPEN THE SCREEN
-  navTimeline.to(navRows, {
-    scaleY: 0,
-    transformOrigin: "top center",
-    duration: 0.9,
-    ease: "power3.inOut",
-    stagger: {
-      each: 0.06,
-      from: "start",
-    },
-  });
+      // OPEN THE SCREEN
+      navTimeline.to(navRows, {
+        scaleY: 0,
+        transformOrigin: "top center",
+        duration: 0.9,
+        ease: "power3.inOut",
+        stagger: {
+          each: 0.06,
+          from: "start",
+        },
+      });
 
-  navTimeline.set(navRows, {
-    scaleY: 0,
-    transformOrigin: "bottom center",
-    onComplete: () => {
-      navBusy = false;
-      navTimeline = null;
-    },
-  });
-};
+      navTimeline.set(navRows, {
+        scaleY: 0,
+        transformOrigin: "bottom center",
+        onComplete: () => {
+          navBusy = false;
+          navTimeline = null;
+        },
+      });
+    };
 
     window.addEventListener("portfolio-nav-transition", handleNavTransition);
 

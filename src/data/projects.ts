@@ -29,25 +29,13 @@ export interface Project {
   year: string;
 }
 
-const repeatedMedia = (
-  src: string,
-  alt: string,
-): ProjectMedia[] => [
-  { type: "image", src, alt },
-  { type: "image", src, alt },
-  { type: "image", src, alt },
-  { type: "image", src, alt },
-  { type: "image", src, alt },
-  { type: "image", src, alt },
-];
-
 export const projects: Record<string, Project> = {
   harbor: {
     number: "Nº001",
     name: "Harbor",
     category: "Product / CRM",
     stack: "React · TypeScript · Tailwind",
-    image: "/images/harbor.png",
+    image: "/project-media/harbor-dashboard.png",
     description:
       "A CRM built for freelancers to manage leads, clients, tasks, and follow ups in one place.",
     link: "/work/harbor",
@@ -71,10 +59,33 @@ export const projects: Record<string, Project> = {
 
     year: "2026",
 
-    media: repeatedMedia(
-      "/images/harbor.png",
-      "Harbor CRM dashboard",
-    ),
+    media: [
+      {
+        type: "image",
+        src: "/project-media/harbor-dashboard.png",
+        alt: "Harbor CRM dashboard",
+      },
+      {
+        type: "image",
+        src: "/project-media/harbor-leads.png",
+        alt: "Harbor CRM leads",
+      },
+      {
+        type: "image",
+        src: "/project-media/harbor-pipeline.png",
+        alt: "Harbor CRM pipeline",
+      },
+      {
+        type: "image",
+        src: "/project-media/harbor-lead-details.png",
+        alt: "Harbor CRM lead details",
+      },
+      {
+        type: "image",
+        src: "/project-media/harbor-new-lead.png",
+        alt: "Harbor CRM new lead",
+      },
+    ],
   },
 
   baithak: {
@@ -82,7 +93,7 @@ export const projects: Record<string, Project> = {
     name: "Baithak",
     category: "Web Design",
     stack: "React · TypeScript · Tailwind",
-    image: "/images/baithak.png",
+    image: "/project-media/baithak-hero.png",
     description:
       "A fictional café website built around atmosphere, typography, and a simple browsing experience.",
     link: "/work/baithak",
@@ -106,10 +117,33 @@ export const projects: Record<string, Project> = {
 
     year: "2026",
 
-    media: repeatedMedia(
-      "/images/baithak.png",
-      "Baithak café website",
-    ),
+    media: [
+      {
+        type: "image",
+        src: "/project-media/baithak-hero.png",
+        alt: "Baithak café website hero",
+      },
+      {
+        type: "image",
+        src: "/project-media/baithak-menu.png",
+        alt: "Baithak café menu",
+      },
+      {
+        type: "image",
+        src: "/project-media/baithak-weekly.png",
+        alt: "Baithak weekly events section",
+      },
+      {
+        type: "image",
+        src: "/project-media/baithak-location.png",
+        alt: "Baithak location section",
+      },
+      {
+        type: "image",
+        src: "/project-media/baithak-footer.png",
+        alt: "Baithak café closing section",
+      },
+    ],
   },
 
   scribe: {
@@ -117,7 +151,7 @@ export const projects: Record<string, Project> = {
     name: "Scribe",
     category: "Product Concept",
     stack: "React · TypeScript · Tailwind",
-    image: "/images/scribe.png",
+    image: "/project-media/scribe-hero.png",
     description:
       "An exploration into a writing tool that learns how you write and helps you create in your own voice.",
     link: "/work/scribe",
@@ -141,9 +175,27 @@ export const projects: Record<string, Project> = {
 
     year: "2026",
 
-    media: repeatedMedia(
-      "/images/scribe.png",
-      "Scribe writing tool",
-    ),
+    media: [
+      {
+        type: "image",
+        src: "/project-media/scribe-waitinglist.png",
+        alt: "Scribe product concept",
+      },
+      {
+        type: "image",
+        src: "/project-media/scribe-hero.png",
+        alt: "Scribe landing page hero",
+      },
+      {
+        type: "image",
+        src: "/project-media/scribe-howitworks.png",
+        alt: "Scribe how it works section",
+      },
+      {
+        type: "image",
+        src: "/project-media/scribe-testimonials.png",
+        alt: "Scribe creator testimonials",
+      },
+    ],
   },
 };
