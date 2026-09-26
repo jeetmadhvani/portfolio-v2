@@ -1,5 +1,4 @@
 import Reveal from "../components/Reveal";
-import Lenis from "lenis";
 import SectionCTA from "../components/SectionCTA";
 
 const Intro = () => {
