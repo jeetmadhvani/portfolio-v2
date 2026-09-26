@@ -27,24 +27,20 @@ const ProjectPage = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    if (!project) return;
+  const meta = document.querySelector(
+    'meta[name="theme-color"]'
+  );
 
-    const themeColor = document.querySelector('meta[name="theme-color"]');
+  if (meta) {
+    meta.setAttribute("content", "#0A0A0A");
+  }
 
-    themeColor?.setAttribute("content", "#0A0A0A");
-
-    const track = trackRef.current;
-    if (!track) return;
-
-    const ctx = gsap.context(() => {
-      // everything you already have...
-    }, track);
-
-    return () => {
-      themeColor?.setAttribute("content", "#500000");
-      ctx.revert();
-    };
-  }, [project]);
+  return () => {
+    if (meta) {
+      meta.setAttribute("content", "#500000");
+    }
+  };
+}, []);
 
   /*
    * Reset everything whenever the
@@ -520,45 +516,88 @@ const ProjectPage = () => {
 
           {galleryMedia.map((item, index) => (
             <div
-  data-gallery-item
-  className="
-    relative
-    shrink-0
-    h-[52vh]
-    md:h-[58vh]
-    lg:h-[62vh]
-    w-auto
-  "
->
-  <div className="h-full w-auto overflow-hidden bg-white/[0.03]">
-    {item.type === "image" ? (
-      <img
-        src={item.src}
-        alt={item.alt || project.name}
-        className="block h-full w-auto object-contain select-none"
-      />
-    ) : (
-      <video
-        src={item.src}
-        className="block h-full w-auto object-contain"
-        muted
-        playsInline
-        loop
-        autoPlay
-      />
-    )}
-  </div>
+              key={`${item.src}-${index}`}
+              data-gallery-item
+              className="
+                  relative
+                  shrink-0
+                  w-[82vw]
+                  md:w-[65vw]
+                  lg:w-[55vw]
+                  max-w-[1000px]
+                  will-change-transform
+                "
+            >
+              <div
+                className="
+                    w-full
+                    aspect-video
+                    overflow-hidden
+                    bg-white/[0.03]
+                  "
+              >
+                {item.type === "image" ? (
+                  <img
+                    src={item.src}
+                    alt={item.alt ?? `${project.name} screenshot`}
+                    draggable={false}
+                    className="
+                        block
+                        w-full
+                        h-full
+                        object-contain
+                        select-none
+                      "
+                  />
+                ) : (
+                  <video
+                    src={item.src}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="
+                        block
+                        w-full
+                        h-full
+                        object-contain
+                      "
+                  />
+                )}
+              </div>
 
-  <div className="flex justify-between mt-3">
-    <span className="font-body text-[10px] tracking-widest uppercase text-white/30">
-      {String(index + 1).padStart(2, "0")}
-    </span>
+              <div
+                className="
+                    flex
+                    justify-between
+                    mt-3
+                  "
+              >
+                <span
+                  className="
+                      font-body
+                      text-[10px]
+                      tracking-widest
+                      uppercase
+                      text-white/30
+                    "
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
 
-    <span className="font-body text-[10px] tracking-widest uppercase text-white/30">
-      {item.type}
-    </span>
-  </div>
-</div>
+                <span
+                  className="
+                      font-body
+                      text-[10px]
+                      tracking-widest
+                      uppercase
+                      text-white/30
+                    "
+                >
+                  {item.type}
+                </span>
+              </div>
+            </div>
           ))}
 
           {/* CASE STUDY */}
