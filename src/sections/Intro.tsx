@@ -1,5 +1,4 @@
 import Reveal from "../components/Reveal";
-import SectionCTA from "../components/SectionCTA";
 
 const Intro = () => {
   return (
@@ -24,42 +23,24 @@ const Intro = () => {
 
       {/* Main content */}
       <div className="col-span-3">
-        <Reveal className="flex flex-col gap-10 md:gap-12 text-2xl md:text-4xl font-body">
+        <Reveal className="flex flex-col gap-8 md:gap-10 text-2xl md:text-4xl font-body">
           <p>
-            I started making websites because I liked the idea of being able to
-            build something from nothing. A blank screen, a few lines of code,
-            and eventually something you can actually use.
+            I like making things from scratch. Turning a rough idea into
+            something you can see, use, and interact with.
           </p>
 
           <p>
-            Somewhere along the way, I started caring about the details just as
-            much as the code.
+            Somewhere along the way, I started caring just as much about how
+            things feel as how they work. Type, spacing, motion, the little
+            details you notice without thinking about them.
           </p>
 
           <p>
-            The type, the spacing, the way a button responds, how a page feels
-            when you scroll through it. Those details are what make something
-            feel considered. I like working where design and code overlap,
-            turning an idea into something that not only works, but feels right
-            to use.
+            <span className="text-white">
+              That's where I like to work.
+            </span>
           </p>
         </Reveal>
-
-        {/* CTA */}
-        <div className="mt-10 md:mt-12 w-full">
-          <SectionCTA
-            text="Let's build something."
-            href="#work"
-            onClick={(e) => {
-              e.preventDefault();
-
-              document.querySelector("#work")?.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
-            }}
-          />
-        </div>
       </div>
     </section>
   );

@@ -12,7 +12,6 @@ const ProjectPage = () => {
   const project = slug ? projects[slug] : null;
 
   const pageRef = useRef<HTMLElement>(null);
-
   const trackRef = useRef<HTMLDivElement>(null);
 
   const targetX = useRef(0);
@@ -26,25 +25,27 @@ const ProjectPage = () => {
 
   const [activeIndex, setActiveIndex] = useState(0);
 
+  /*
+   * PROJECT PAGE THEME COLOR
+   */
   useEffect(() => {
-  const meta = document.querySelector(
-    'meta[name="theme-color"]'
-  );
+    const meta = document.querySelector(
+      'meta[name="theme-color"]',
+    );
 
-  if (meta) {
-    meta.setAttribute("content", "#0A0A0A");
-  }
-
-  return () => {
     if (meta) {
-      meta.setAttribute("content", "#500000");
+      meta.setAttribute("content", "#0A0A0A");
     }
-  };
-}, []);
+
+    return () => {
+      if (meta) {
+        meta.setAttribute("content", "#500000");
+      }
+    };
+  }, []);
 
   /*
-   * Reset everything whenever the
-   * project changes.
+   * RESET WHEN PROJECT CHANGES
    */
   useEffect(() => {
     targetX.current = 0;
@@ -52,73 +53,93 @@ const ProjectPage = () => {
     pendingMovement.current = 0;
     introFinished.current = false;
     activeIndexRef.current = 0;
+
     setActiveIndex(0);
   }, [slug]);
 
+  /*
+   * PROJECT ANIMATION
+   */
   useEffect(() => {
     if (!project) return;
 
     const page = pageRef.current;
-
     const track = trackRef.current;
 
     if (!page || !track) return;
 
     const ctx = gsap.context(() => {
-      const header = page.querySelector("[data-project-header]");
+      const header = page.querySelector(
+        "[data-project-header]",
+      );
 
-      const title = page.querySelector("[data-project-title]");
+      const title = page.querySelector(
+        "[data-project-title]",
+      );
 
-      const description = page.querySelector("[data-project-description]");
+      const description = page.querySelector(
+        "[data-project-description]",
+      );
 
-      const meta = page.querySelectorAll("[data-project-meta]");
+      const meta = page.querySelectorAll(
+        "[data-project-meta]",
+      );
 
       /*
-       * IMPORTANT:
-       * Only actual media items are
-       * gallery items.
-       *
-       * The case study is NOT included.
+       * Only actual gallery items count
+       * toward the image index.
        */
       const getItems = () =>
-        Array.from(track.querySelectorAll<HTMLElement>("[data-gallery-item]"));
+        Array.from(
+          track.querySelectorAll<HTMLElement>(
+            "[data-gallery-item]",
+          ),
+        );
 
-      const getMaxX = () => Math.max(0, track.scrollWidth - window.innerWidth);
+      const getMaxX = () =>
+        Math.max(
+          0,
+          track.scrollWidth - window.innerWidth,
+        );
 
       /*
-       * Find the media item closest
-       * to the viewport center.
+       * Find gallery item closest
+       * to viewport center.
        */
       const updateActiveIndex = () => {
         const items = getItems();
 
         if (!items.length) return;
 
-        const viewportCenter = window.innerWidth / 2;
+        const viewportCenter =
+          window.innerWidth / 2;
 
         let closestIndex = 0;
         let closestDistance = Infinity;
 
         items.forEach((item, index) => {
-          const rect = item.getBoundingClientRect();
+          const rect =
+            item.getBoundingClientRect();
 
-          const itemCenter = rect.left + rect.width / 2;
+          const itemCenter =
+            rect.left + rect.width / 2;
 
-          const distance = Math.abs(itemCenter - viewportCenter);
+          const distance = Math.abs(
+            itemCenter - viewportCenter,
+          );
 
           if (distance < closestDistance) {
             closestDistance = distance;
-
             closestIndex = index;
           }
         });
 
-        /*
-         * Don't set React state on
-         * every GSAP ticker frame.
-         */
-        if (closestIndex !== activeIndexRef.current) {
-          activeIndexRef.current = closestIndex;
+        if (
+          closestIndex !==
+          activeIndexRef.current
+        ) {
+          activeIndexRef.current =
+            closestIndex;
 
           setActiveIndex(closestIndex);
         }
@@ -131,30 +152,41 @@ const ProjectPage = () => {
       const updateItems = () => {
         const items = getItems();
 
-        const viewportCenter = window.innerWidth / 2;
+        const viewportCenter =
+          window.innerWidth / 2;
 
         items.forEach((item) => {
-          const rect = item.getBoundingClientRect();
+          const rect =
+            item.getBoundingClientRect();
 
-          const itemCenter = rect.left + rect.width / 2;
+          const itemCenter =
+            rect.left + rect.width / 2;
 
-          const distance = itemCenter - viewportCenter;
+          const distance =
+            itemCenter - viewportCenter;
 
-          const normalized = gsap.utils.clamp(
-            -1,
-            1,
-            distance / (window.innerWidth * 0.72),
-          );
+          const normalized =
+            gsap.utils.clamp(
+              -1,
+              1,
+              distance /
+                (window.innerWidth * 0.72),
+            );
 
-          const distanceAmount = Math.abs(normalized);
+          const distanceAmount =
+            Math.abs(normalized);
 
-          const scale = 1 - distanceAmount * 0.055;
+          const scale =
+            1 - distanceAmount * 0.055;
 
-          const opacity = 1 - distanceAmount * 0.35;
+          const opacity =
+            1 - distanceAmount * 0.35;
 
-          const parallax = normalized * -18;
+          const parallax =
+            normalized * -18;
 
-          const vertical = distanceAmount * 5;
+          const vertical =
+            distanceAmount * 5;
 
           gsap.set(item, {
             scale,
@@ -173,32 +205,37 @@ const ProjectPage = () => {
           return;
         }
 
-        currentX.current += (targetX.current - currentX.current) * 0.075;
+        currentX.current +=
+          (targetX.current -
+            currentX.current) *
+          0.075;
 
         const maxX = getMaxX();
 
-        currentX.current = gsap.utils.clamp(-maxX, 0, currentX.current);
+        currentX.current =
+          gsap.utils.clamp(
+            -maxX,
+            0,
+            currentX.current,
+          );
 
-        targetX.current = gsap.utils.clamp(-maxX, 0, targetX.current);
+        targetX.current =
+          gsap.utils.clamp(
+            -maxX,
+            0,
+            targetX.current,
+          );
 
         gsap.set(track, {
           x: currentX.current,
         });
 
         updateItems();
-
-        /*
-         * THIS was missing.
-         *
-         * Update the image index
-         * continuously while scrolling.
-         */
         updateActiveIndex();
       };
 
       /*
-       * Make absolutely sure this
-       * project starts from the beginning.
+       * Start gallery off-screen.
        */
       gsap.set(track, {
         x: window.innerWidth,
@@ -239,11 +276,17 @@ const ProjectPage = () => {
 
           currentX.current = 0;
 
-          targetX.current = pendingMovement.current;
+          targetX.current =
+            pendingMovement.current;
 
           const maxX = getMaxX();
 
-          targetX.current = gsap.utils.clamp(-maxX, 0, targetX.current);
+          targetX.current =
+            gsap.utils.clamp(
+              -maxX,
+              0,
+              targetX.current,
+            );
 
           updateItems();
           updateActiveIndex();
@@ -309,20 +352,22 @@ const ProjectPage = () => {
 
         onChange: (self) => {
           const movement =
-            Math.abs(self.deltaX) > Math.abs(self.deltaY)
+            Math.abs(self.deltaX) >
+            Math.abs(self.deltaY)
               ? self.deltaX
               : self.deltaY;
 
-          const sensitivity = window.innerWidth < 768 ? 2.2 : 0.85;
+          const sensitivity =
+            window.innerWidth < 768
+              ? 2.2
+              : 0.85;
 
-          const delta = movement * sensitivity;
+          const delta =
+            movement * sensitivity;
 
-          /*
-           * Allow the user to start
-           * scrolling during the intro.
-           */
           if (!introFinished.current) {
-            pendingMovement.current += delta;
+            pendingMovement.current +=
+              delta;
 
             return;
           }
@@ -331,12 +376,17 @@ const ProjectPage = () => {
 
           const maxX = getMaxX();
 
-          targetX.current = gsap.utils.clamp(-maxX, 0, targetX.current);
+          targetX.current =
+            gsap.utils.clamp(
+              -maxX,
+              0,
+              targetX.current,
+            );
         },
       });
 
       /*
-       * GSAP ticker
+       * GSAP TICKER
        */
       const ticker = () => {
         updatePosition();
@@ -345,7 +395,7 @@ const ProjectPage = () => {
       gsap.ticker.add(ticker);
 
       /*
-       * Resize
+       * RESIZE
        */
       const handleResize = () => {
         if (!introFinished.current) {
@@ -354,22 +404,34 @@ const ProjectPage = () => {
 
         const maxX = getMaxX();
 
-        currentX.current = gsap.utils.clamp(-maxX, 0, currentX.current);
+        currentX.current =
+          gsap.utils.clamp(
+            -maxX,
+            0,
+            currentX.current,
+          );
 
-        targetX.current = currentX.current;
+        targetX.current =
+          currentX.current;
 
         updateItems();
         updateActiveIndex();
       };
 
-      window.addEventListener("resize", handleResize);
+      window.addEventListener(
+        "resize",
+        handleResize,
+      );
 
       return () => {
         observer.kill();
 
         gsap.ticker.remove(ticker);
 
-        window.removeEventListener("resize", handleResize);
+        window.removeEventListener(
+          "resize",
+          handleResize,
+        );
 
         introTl.kill();
       };
@@ -381,7 +443,7 @@ const ProjectPage = () => {
   }, [slug, project]);
 
   /*
-   * Invalid project
+   * INVALID PROJECT
    */
   if (!project) {
     return (
@@ -396,30 +458,53 @@ const ProjectPage = () => {
           justify-center
         "
       >
-        <Link
-          to="/#work"
+        <button
+          onClick={() => {
+            window.location.href = "/#work";
+          }}
           className="
             font-body
             text-sm
             underline
             underline-offset-4
+            cursor-pointer
           "
         >
           Back to work
-        </Link>
+        </button>
       </main>
     );
   }
 
-  const projectSlugs = Object.keys(projects);
+  const projectSlugs =
+    Object.keys(projects);
 
-  const currentIndex = projectSlugs.indexOf(slug ?? "");
+  const currentIndex =
+    projectSlugs.indexOf(slug ?? "");
 
-  const nextSlug = projectSlugs[(currentIndex + 1) % projectSlugs.length];
+  const nextSlug =
+    projectSlugs[
+      (currentIndex + 1) %
+        projectSlugs.length
+    ];
 
-  const nextProject = projects[nextSlug];
+  const nextProject =
+    projects[nextSlug];
 
-  const galleryMedia = project.media;
+  const galleryMedia =
+    project.media;
+
+  /*
+   * BACK TO WORK
+   *
+   * Hard navigation is intentional here.
+   * It makes /#work load Home at the
+   * actual Work section instead of relying
+   * on React Router's hash behaviour.
+   */
+  const handleBackToWork = () => {
+    window.location.href = "/#work";
+  };
 
   return (
     <main
@@ -436,56 +521,46 @@ const ProjectPage = () => {
         noise
       "
     >
+      {/* ================================================== */}
       {/* HEADER */}
+      {/* ================================================== */}
 
       <header
         data-project-header
         className="
-    absolute
-    top-0
-    left-0
-    right-0
-    z-50
-    px-6
-    md:px-10
-    lg:px-16
-    py-5
-    md:py-7
-    flex
-    justify-between
-    items-center
-  "
+          absolute
+          top-0
+          left-0
+          right-0
+          z-50
+          px-6
+          md:px-10
+          lg:px-16
+          py-5
+          md:py-7
+        "
       >
-        <Link
-          to="/"
-          className="
-      font-hegarty
-      text-xl
-      md:text-2xl
-      tracking-wider
-    "
-        >
-          JEET MADHVANI
-        </Link>
-
         <button
-          onClick={() => window.history.back()}
+          onClick={handleBackToWork}
           className="
-      font-body
-      text-xs
-      tracking-widest
-      uppercase
-      text-white/50
-      hover:text-white
-      transition-colors
-      cursor-pointer
-    "
+            font-body
+            text-xs
+            tracking-widest
+            uppercase
+            text-white/50
+            hover:text-white
+            transition-colors
+            pointer-events-auto
+            cursor-pointer
+          "
         >
           ← Back
         </button>
       </header>
 
+      {/* ================================================== */}
       {/* HORIZONTAL CONTENT */}
+      {/* ================================================== */}
 
       <div
         className="
@@ -512,13 +587,16 @@ const ProjectPage = () => {
             will-change-transform
           "
         >
+          {/* ================================================== */}
           {/* MEDIA */}
+          {/* ================================================== */}
 
-          {galleryMedia.map((item, index) => (
-            <div
-              key={`${item.src}-${index}`}
-              data-gallery-item
-              className="
+          {galleryMedia.map(
+            (item, index) => (
+              <div
+                key={`${item.src}-${index}`}
+                data-gallery-item
+                className="
                   relative
                   shrink-0
                   w-[82vw]
@@ -527,80 +605,89 @@ const ProjectPage = () => {
                   max-w-[1000px]
                   will-change-transform
                 "
-            >
-              <div
-                className="
+              >
+                <div
+                  className="
                     w-full
                     aspect-video
                     overflow-hidden
                     bg-white/[0.03]
                   "
-              >
-                {item.type === "image" ? (
-                  <img
-                    src={item.src}
-                    alt={item.alt ?? `${project.name} screenshot`}
-                    draggable={false}
-                    className="
+                >
+                  {item.type ===
+                  "image" ? (
+                    <img
+                      src={item.src}
+                      alt={
+                        item.alt ??
+                        `${project.name} screenshot`
+                      }
+                      draggable={false}
+                      className="
                         block
                         w-full
                         h-full
                         object-contain
                         select-none
                       "
-                  />
-                ) : (
-                  <video
-                    src={item.src}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="
+                    />
+                  ) : (
+                    <video
+                      src={item.src}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="
                         block
                         w-full
                         h-full
                         object-contain
                       "
-                  />
-                )}
-              </div>
+                    />
+                  )}
+                </div>
 
-              <div
-                className="
+                <div
+                  className="
                     flex
                     justify-between
                     mt-3
                   "
-              >
-                <span
-                  className="
+                >
+                  <span
+                    className="
                       font-body
                       text-[10px]
                       tracking-widest
                       uppercase
                       text-white/30
                     "
-                >
-                  {String(index + 1).padStart(2, "0")}
-                </span>
+                  >
+                    {String(
+                      index + 1,
+                    ).padStart(2, "0")}
+                  </span>
 
-                <span
-                  className="
+                  <span
+                    className="
                       font-body
                       text-[10px]
                       tracking-widest
                       uppercase
                       text-white/30
                     "
-                >
-                  {item.type}
-                </span>
+                  >
+                    {item.type}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ),
+          )}
 
+          {/* ================================================== */}
           {/* CASE STUDY */}
+          {/* ================================================== */}
 
           <div
             data-case-study
@@ -632,6 +719,8 @@ const ProjectPage = () => {
                   gap-10
                 "
               >
+                {/* LEFT */}
+
                 <div>
                   <span
                     className="
@@ -660,7 +749,11 @@ const ProjectPage = () => {
                   </div>
                 </div>
 
+                {/* RIGHT */}
+
                 <div className="space-y-8">
+                  {/* Problem */}
+
                   <div>
                     <span
                       className="
@@ -685,9 +778,15 @@ const ProjectPage = () => {
                         text-white/60
                       "
                     >
-                      {project.caseStudy.problem}
+                      {
+                        project
+                          .caseStudy
+                          .problem
+                      }
                     </p>
                   </div>
+
+                  {/* Approach */}
 
                   <div>
                     <span
@@ -713,9 +812,15 @@ const ProjectPage = () => {
                         text-white/60
                       "
                     >
-                      {project.caseStudy.approach}
+                      {
+                        project
+                          .caseStudy
+                          .approach
+                      }
                     </p>
                   </div>
+
+                  {/* Role + Stack */}
 
                   <div
                     className="
@@ -724,6 +829,8 @@ const ProjectPage = () => {
                       gap-8
                     "
                   >
+                    {/* Role */}
+
                     <div>
                       <span
                         className="
@@ -746,9 +853,15 @@ const ProjectPage = () => {
                           text-white/60
                         "
                       >
-                        {project.caseStudy.role}
+                        {
+                          project
+                            .caseStudy
+                            .role
+                        }
                       </p>
                     </div>
+
+                    {/* Stack */}
 
                     <div>
                       <span
@@ -783,7 +896,9 @@ const ProjectPage = () => {
         </div>
       </div>
 
+      {/* ================================================== */}
       {/* BOTTOM INFORMATION */}
+      {/* ================================================== */}
 
       <div
         className="
@@ -800,7 +915,9 @@ const ProjectPage = () => {
           pointer-events-none
         "
       >
+        {/* ================================================== */}
         {/* DESKTOP */}
+        {/* ================================================== */}
 
         <div
           className="
@@ -809,12 +926,14 @@ const ProjectPage = () => {
             pt-4
             hidden
             md:grid
-            md:grid-cols-4
-            gap-6
-            items-end
+            md:grid-cols-[1fr_2fr_1fr]
+            gap-8
+            items-start
           "
         >
-          <div>
+          {/* PROJECT */}
+
+          <div className="min-w-0">
             <span
               data-project-meta
               className="
@@ -845,7 +964,9 @@ const ProjectPage = () => {
             </h1>
           </div>
 
-          <div className="col-span-2">
+          {/* ABOUT */}
+
+          <div className="min-w-0">
             <span
               data-project-meta
               className="
@@ -868,14 +989,16 @@ const ProjectPage = () => {
                 text-sm
                 leading-relaxed
                 text-white/60
-                max-w-lg
+                max-w-xl
               "
             >
               {project.description}
             </p>
           </div>
 
-          <div className="text-right">
+          {/* CATEGORY */}
+
+          <div className="min-w-0">
             <span
               data-project-meta
               className="
@@ -888,18 +1011,19 @@ const ProjectPage = () => {
                 mb-2
               "
             >
-              Stack
+              Category
             </span>
 
             <span
               data-project-meta
               className="
+                block
                 font-body
                 text-xs
                 text-white/60
               "
             >
-              {project.stack}
+              {project.category}
             </span>
 
             <span
@@ -917,7 +1041,9 @@ const ProjectPage = () => {
           </div>
         </div>
 
+        {/* ================================================== */}
         {/* MOBILE */}
+        {/* ================================================== */}
 
         <div
           className="
@@ -927,7 +1053,16 @@ const ProjectPage = () => {
             pt-4
           "
         >
-          <div className="flex justify-between items-start">
+          <div
+            className="
+              grid
+              grid-cols-[1fr_auto]
+              gap-6
+              items-start
+            "
+          >
+            {/* PROJECT */}
+
             <div>
               <span
                 data-project-meta
@@ -957,6 +1092,8 @@ const ProjectPage = () => {
               </h1>
             </div>
 
+            {/* CATEGORY */}
+
             <div className="text-right">
               <span
                 data-project-meta
@@ -970,7 +1107,7 @@ const ProjectPage = () => {
                   mb-2
                 "
               >
-                Stack
+                Category
               </span>
 
               <span
@@ -980,10 +1117,9 @@ const ProjectPage = () => {
                   font-body
                   text-[11px]
                   text-white/60
-                  max-w-[150px]
                 "
               >
-                {project.stack}
+                {project.category}
               </span>
 
               <span
@@ -1001,6 +1137,8 @@ const ProjectPage = () => {
             </div>
           </div>
 
+          {/* DESCRIPTION */}
+
           <p
             data-project-description
             className="
@@ -1016,7 +1154,9 @@ const ProjectPage = () => {
           </p>
         </div>
 
+        {/* ================================================== */}
         {/* NAVIGATION */}
+        {/* ================================================== */}
 
         <div
           className="
@@ -1027,6 +1167,8 @@ const ProjectPage = () => {
             md:mt-5
           "
         >
+          {/* IMAGE INDEX */}
+
           <span
             className="
               font-body
@@ -1036,9 +1178,16 @@ const ProjectPage = () => {
               text-white/30
             "
           >
-            {String(activeIndex + 1).padStart(2, "0")} /{" "}
-            {String(galleryMedia.length).padStart(2, "0")}
+            {String(
+              activeIndex + 1,
+            ).padStart(2, "0")}{" "}
+            /{" "}
+            {String(
+              galleryMedia.length,
+            ).padStart(2, "0")}
           </span>
+
+          {/* NEXT PROJECT */}
 
           <Link
             to={`/work/${nextSlug}`}
@@ -1057,7 +1206,9 @@ const ProjectPage = () => {
               transition-colors
             "
           >
-            <span>Next project</span>
+            <span>
+              Next project
+            </span>
 
             <span
               className="
@@ -1069,7 +1220,9 @@ const ProjectPage = () => {
               →
             </span>
 
-            <span className="text-white">{nextProject.name}</span>
+            <span className="text-white">
+              {nextProject.name}
+            </span>
           </Link>
         </div>
       </div>
