@@ -29,7 +29,9 @@ const WorkSection = () => {
 
   const textRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // DESKTOP PINNED EXPERIENCE
+  /*
+   * DESKTOP PINNED EXPERIENCE
+   */
   useEffect(() => {
     const container = sectionRef.current;
     const work = workRef.current;
@@ -40,6 +42,10 @@ const WorkSection = () => {
 
     mm.add("(min-width: 1024px)", () => {
       const ctx = gsap.context(() => {
+        /*
+         * SECTION HEIGHT
+         */
+
         const setupHeight = () => {
           const pinDistance =
             (projects.length - 1) * window.innerHeight;
@@ -52,14 +58,24 @@ const WorkSection = () => {
 
         setupHeight();
 
-        ScrollTrigger.create({
+        /*
+         * PINNED WORK SECTION
+         */
+
+        const workTrigger = ScrollTrigger.create({
           id: "work-scroll",
+
           trigger: container,
+
           start: "top top",
+
           end: () =>
             `+=${(projects.length - 1) * window.innerHeight}`,
+
           pin: work,
+
           pinSpacing: false,
+
           anticipatePin: 1,
 
           onUpdate: (self) => {
@@ -77,19 +93,50 @@ const WorkSection = () => {
             sliderControl.current?.goTo(newIndex);
 
             activeIndexRef.current = newIndex;
+
             setActiveIndex(newIndex);
           },
 
           onRefreshInit: setupHeight,
         });
+
+        /*
+         * RETURN FROM PROJECT PAGE
+         */
+
+        const returnTarget =
+          sessionStorage.getItem("portfolio-scroll-target");
+
+        if (returnTarget === "work") {
+          sessionStorage.removeItem("portfolio-scroll-target");
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              ScrollTrigger.refresh();
+
+              window.scrollTo(
+                0,
+                workTrigger.start,
+              );
+            });
+          });
+        }
+
+        /*
+         * CLEANUP
+         */
+
+        return () => {
+          workTrigger.kill();
+
+          if (sectionRef.current) {
+            sectionRef.current.style.height = "";
+          }
+        };
       }, sectionRef);
 
       return () => {
         ctx.revert();
-
-        if (sectionRef.current) {
-          sectionRef.current.style.height = "";
-        }
       };
     });
 
@@ -102,7 +149,10 @@ const WorkSection = () => {
     };
   }, []);
 
-  // PROJECT TEXT ANIMATION
+  /*
+   * PROJECT TEXT ANIMATION
+   */
+
   useEffect(() => {
     textRefs.current.forEach((ref, i) => {
       if (!ref) return;
@@ -114,21 +164,21 @@ const WorkSection = () => {
           ref,
           {
             opacity: 0,
-            y: 24,
+            x: -12,
           },
           {
             opacity: 1,
-            y: 0,
-            duration: 0.6,
-            delay: 0.15,
+            x: 0,
+            duration: 0.45,
+            delay: 0.05,
             ease: "power2.out",
           },
         );
       } else {
         gsap.to(ref, {
           opacity: 0,
-          y: -16,
-          duration: 0.3,
+          x: -10,
+          duration: 0.25,
           ease: "power2.in",
         });
       }
@@ -146,7 +196,9 @@ const WorkSection = () => {
         px-8 md:px-16
       "
     >
+      {/* ================================================== */}
       {/* DESKTOP */}
+      {/* ================================================== */}
 
       <section
         ref={workRef}
@@ -158,7 +210,15 @@ const WorkSection = () => {
         "
       >
         {/* Section label */}
-        <div className="absolute top-8 left-0 z-10">
+
+        <div
+          className="
+            absolute
+            top-8
+            left-0
+            z-10
+          "
+        >
           <span
             className="
               text-xs
@@ -173,6 +233,7 @@ const WorkSection = () => {
         </div>
 
         {/* Project index */}
+
         <div
           className="
             absolute
@@ -184,22 +245,51 @@ const WorkSection = () => {
             gap-2
           "
         >
-          <span className="font-body text-xs tracking-widest text-white/70">
+          <span
+            className="
+              font-body
+              text-xs
+              tracking-widest
+              text-white/70
+            "
+          >
             {String(activeIndex + 1).padStart(2, "0")}
           </span>
 
-          <span className="font-body text-[10px] tracking-widest text-white/25">
+          <span
+            className="
+              font-body
+              text-[10px]
+              tracking-widest
+              text-white/25
+            "
+          >
             /
           </span>
 
-          <span className="font-body text-[10px] tracking-widest text-white/30">
+          <span
+            className="
+              font-body
+              text-[10px]
+              tracking-widest
+              text-white/30
+            "
+          >
             {String(projects.length).padStart(2, "0")}
           </span>
         </div>
 
         {/* Main layout */}
-        <div className="grid grid-cols-[7fr_5fr] h-full">
+
+        <div
+          className="
+            grid
+            grid-cols-[7fr_5fr]
+            h-full
+          "
+        >
           {/* PROJECT VISUAL */}
+
           <div
             className="
               relative
@@ -218,7 +308,8 @@ const WorkSection = () => {
                 overflow-hidden
               "
               style={{
-                backgroundColor: activeProject.visual.background,
+                backgroundColor:
+                  activeProject.visual.background,
               }}
             >
               <MorphSlider
@@ -242,6 +333,7 @@ const WorkSection = () => {
           </div>
 
           {/* PROJECT INFORMATION */}
+
           <div
             className="
               relative
@@ -251,8 +343,19 @@ const WorkSection = () => {
               pl-8
             "
           >
-            <div className="relative w-full max-w-lg">
-              <div className="relative h-[300px]">
+            <div
+              className="
+                relative
+                w-full
+                max-w-lg
+              "
+            >
+              <div
+                className="
+                  relative
+                  h-[300px]
+                "
+              >
                 {projects.map((project, i) => (
                   <div
                     key={project.number}
@@ -271,6 +374,7 @@ const WorkSection = () => {
                     }}
                   >
                     {/* Number */}
+
                     <span
                       className="
                         block
@@ -285,6 +389,7 @@ const WorkSection = () => {
                     </span>
 
                     {/* Title */}
+
                     <h2
                       className="
                         mb-6
@@ -298,6 +403,7 @@ const WorkSection = () => {
                     </h2>
 
                     {/* Category */}
+
                     <span
                       className="
                         block
@@ -313,6 +419,7 @@ const WorkSection = () => {
                     </span>
 
                     {/* Description */}
+
                     <p
                       className="
                         max-w-sm
@@ -329,6 +436,7 @@ const WorkSection = () => {
               </div>
 
               {/* CTA */}
+
               <div className="mt-8">
                 <SectionCTA
                   text="View case study"
@@ -340,10 +448,18 @@ const WorkSection = () => {
         </div>
       </section>
 
+      {/* ================================================== */}
       {/* MOBILE + TABLET */}
+      {/* ================================================== */}
 
-      <section className="lg:hidden w-full">
+      <section
+        className="
+          lg:hidden
+          w-full
+        "
+      >
         {/* Section label */}
+
         <div className="mb-12">
           <span
             className="
@@ -359,14 +475,29 @@ const WorkSection = () => {
         </div>
 
         {/* Projects */}
-        <div className="flex flex-col gap-16">
+
+        <div
+          className="
+            flex
+            flex-col
+            gap-16
+          "
+        >
           {projects.map((project, i) => (
             <article
               key={project.number}
               className="w-full"
             >
               {/* Project number */}
-              <div className="flex items-center justify-between mb-4">
+
+              <div
+                className="
+                  flex
+                  items-center
+                  justify-between
+                  mb-4
+                "
+              >
                 <span
                   className="
                     text-xs
@@ -392,6 +523,7 @@ const WorkSection = () => {
               </div>
 
               {/* Image */}
+
               <div
                 className="
                   relative
@@ -401,7 +533,8 @@ const WorkSection = () => {
                   mb-8
                 "
                 style={{
-                  backgroundColor: project.visual.background,
+                  backgroundColor:
+                    project.visual.background,
                 }}
               >
                 <img
@@ -418,8 +551,10 @@ const WorkSection = () => {
               </div>
 
               {/* Information */}
+
               <div className="w-full">
                 {/* Title */}
+
                 <h2
                   className="
                     mb-6
@@ -434,6 +569,7 @@ const WorkSection = () => {
                 </h2>
 
                 {/* Category */}
+
                 <span
                   className="
                     block
@@ -449,6 +585,7 @@ const WorkSection = () => {
                 </span>
 
                 {/* Description */}
+
                 <p
                   className="
                     max-w-md
@@ -463,6 +600,7 @@ const WorkSection = () => {
                 </p>
 
                 {/* CTA */}
+
                 <SectionCTA
                   text="View case study"
                   href={project.link}

@@ -29,9 +29,7 @@ const ProjectPage = () => {
    * PROJECT PAGE THEME COLOR
    */
   useEffect(() => {
-    const meta = document.querySelector(
-      'meta[name="theme-color"]',
-    );
+    const meta = document.querySelector('meta[name="theme-color"]');
 
     if (meta) {
       meta.setAttribute("content", "#0A0A0A");
@@ -69,21 +67,15 @@ const ProjectPage = () => {
     if (!page || !track) return;
 
     const ctx = gsap.context(() => {
-      const header = page.querySelector(
-        "[data-project-header]",
-      );
+      const header = page.querySelector("[data-project-header]");
 
-      const title = page.querySelector(
-        "[data-project-title]",
-      );
+      const title = page.querySelector("[data-project-title]");
 
       const description = page.querySelector(
         "[data-project-description]",
       );
 
-      const meta = page.querySelectorAll(
-        "[data-project-meta]",
-      );
+      const meta = page.querySelectorAll("[data-project-meta]");
 
       /*
        * Only actual gallery items count
@@ -111,15 +103,13 @@ const ProjectPage = () => {
 
         if (!items.length) return;
 
-        const viewportCenter =
-          window.innerWidth / 2;
+        const viewportCenter = window.innerWidth / 2;
 
         let closestIndex = 0;
         let closestDistance = Infinity;
 
         items.forEach((item, index) => {
-          const rect =
-            item.getBoundingClientRect();
+          const rect = item.getBoundingClientRect();
 
           const itemCenter =
             rect.left + rect.width / 2;
@@ -496,14 +486,14 @@ const ProjectPage = () => {
 
   /*
    * BACK TO WORK
-   *
-   * Hard navigation is intentional here.
-   * It makes /#work load Home at the
-   * actual Work section instead of relying
-   * on React Router's hash behaviour.
    */
   const handleBackToWork = () => {
-    window.location.href = "/#work";
+    sessionStorage.setItem(
+      "portfolio-scroll-target",
+      "work",
+    );
+
+    window.location.href = "/";
   };
 
   return (
@@ -544,17 +534,20 @@ const ProjectPage = () => {
           onClick={handleBackToWork}
           className="
             font-body
-            text-xs
+            text-base
             tracking-widest
-            uppercase
             text-white/50
             hover:text-white
             transition-colors
             pointer-events-auto
             cursor-pointer
+            flex
+            items-center
+            gap-3
           "
         >
-          ← Back
+          <span>←</span>
+          <span>Work</span>
         </button>
       </header>
 
@@ -563,13 +556,16 @@ const ProjectPage = () => {
       {/* ================================================== */}
 
       <div
-        className="
-          absolute
-          inset-0
-          z-10
-          overflow-hidden
-        "
-      >
+  className="
+    absolute
+    inset-0
+    bottom-[80px]
+    md:bottom-[85px]
+    lg:bottom-[90px]
+    z-10
+    overflow-hidden
+  "
+>
         <div
           ref={trackRef}
           className="
@@ -614,8 +610,7 @@ const ProjectPage = () => {
                     bg-white/[0.03]
                   "
                 >
-                  {item.type ===
-                  "image" ? (
+                  {item.type === "image" ? (
                     <img
                       src={item.src}
                       alt={
@@ -647,40 +642,6 @@ const ProjectPage = () => {
                     />
                   )}
                 </div>
-
-                <div
-                  className="
-                    flex
-                    justify-between
-                    mt-3
-                  "
-                >
-                  <span
-                    className="
-                      font-body
-                      text-[10px]
-                      tracking-widest
-                      uppercase
-                      text-white/30
-                    "
-                  >
-                    {String(
-                      index + 1,
-                    ).padStart(2, "0")}
-                  </span>
-
-                  <span
-                    className="
-                      font-body
-                      text-[10px]
-                      tracking-widest
-                      uppercase
-                      text-white/30
-                    "
-                  >
-                    {item.type}
-                  </span>
-                </div>
               </div>
             ),
           )}
@@ -698,7 +659,7 @@ const ProjectPage = () => {
               md:w-[65vw]
               lg:w-[55vw]
               max-w-[1000px]
-              h-[70vh]
+              h-full
               flex
               items-center
             "
@@ -708,187 +669,158 @@ const ProjectPage = () => {
                 w-full
                 border-t
                 border-white/20
-                pt-6
+                pt-8
+                md:pt-10
               "
             >
+              {/* PROBLEM + APPROACH */}
+
+              <div
+                className="
+                  grid
+                  grid-cols-1
+                  md:grid-cols-2
+                  gap-12
+                  md:gap-16
+                "
+              >
+                {/* PROBLEM */}
+
+                <div>
+                  <span
+                    className="
+                      block
+                      font-body
+                      text-[10px]
+                      tracking-widest
+                      uppercase
+                      text-white/30
+                      mb-5
+                    "
+                  >
+                    The problem
+                  </span>
+
+                  <p
+                    className="
+                      font-body
+                      text-base
+                      md:text-lg
+                      leading-relaxed
+                      text-white/70
+                      max-w-xl
+                    "
+                  >
+                    {project.caseStudy.problem}
+                  </p>
+                </div>
+
+                {/* APPROACH */}
+
+                <div>
+                  <span
+                    className="
+                      block
+                      font-body
+                      text-[10px]
+                      tracking-widest
+                      uppercase
+                      text-white/30
+                      mb-5
+                    "
+                  >
+                    The approach
+                  </span>
+
+                  <p
+                    className="
+                      font-body
+                      text-base
+                      md:text-lg
+                      leading-relaxed
+                      text-white/70
+                      max-w-xl
+                    "
+                  >
+                    {project.caseStudy.approach}
+                  </p>
+                </div>
+              </div>
+
+              {/* ROLE + STACK */}
+
               <div
                 className="
                   grid
                   grid-cols-1
                   md:grid-cols-2
                   gap-10
+                  md:gap-16
+                  mt-14
+                  md:mt-16
+                  pt-6
                 "
               >
-                {/* LEFT */}
+                {/* ROLE */}
 
                 <div>
                   <span
                     className="
+                      block
                       font-body
                       text-[10px]
                       tracking-widest
                       uppercase
                       text-white/30
+                      mb-3
                     "
                   >
-                    Case Study
+                    My role
                   </span>
 
-                  <div className="mt-8">
-                    <span
-                      className="
-                        font-body
-                        text-[10px]
-                        tracking-widest
-                        uppercase
-                        text-white/30
-                      "
-                    >
-                      {project.number}
-                    </span>
-                  </div>
-                </div>
-
-                {/* RIGHT */}
-
-                <div className="space-y-8">
-                  {/* Problem */}
-
-                  <div>
-                    <span
-                      className="
-                        block
-                        font-body
-                        text-[10px]
-                        tracking-widest
-                        uppercase
-                        text-white/30
-                        mb-3
-                      "
-                    >
-                      The problem
-                    </span>
-
-                    <p
-                      className="
-                        font-body
-                        text-sm
-                        md:text-base
-                        leading-relaxed
-                        text-white/60
-                      "
-                    >
-                      {
-                        project
-                          .caseStudy
-                          .problem
-                      }
-                    </p>
-                  </div>
-
-                  {/* Approach */}
-
-                  <div>
-                    <span
-                      className="
-                        block
-                        font-body
-                        text-[10px]
-                        tracking-widest
-                        uppercase
-                        text-white/30
-                        mb-3
-                      "
-                    >
-                      The approach
-                    </span>
-
-                    <p
-                      className="
-                        font-body
-                        text-sm
-                        md:text-base
-                        leading-relaxed
-                        text-white/60
-                      "
-                    >
-                      {
-                        project
-                          .caseStudy
-                          .approach
-                      }
-                    </p>
-                  </div>
-
-                  {/* Role + Stack */}
-
-                  <div
+                  <p
                     className="
-                      grid
-                      grid-cols-2
-                      gap-8
+                      font-body
+                      text-sm
+                      md:text-base
+                      leading-relaxed
+                      text-white/60
+                      max-w-md
                     "
                   >
-                    {/* Role */}
+                    {project.caseStudy.role}
+                  </p>
+                </div>
 
-                    <div>
-                      <span
-                        className="
-                          block
-                          font-body
-                          text-[10px]
-                          tracking-widest
-                          uppercase
-                          text-white/30
-                          mb-3
-                        "
-                      >
-                        My role
-                      </span>
+                {/* STACK */}
 
-                      <p
-                        className="
-                          font-body
-                          text-sm
-                          text-white/60
-                        "
-                      >
-                        {
-                          project
-                            .caseStudy
-                            .role
-                        }
-                      </p>
-                    </div>
+                <div>
+                  <span
+                    className="
+                      block
+                      font-body
+                      text-[10px]
+                      tracking-widest
+                      uppercase
+                      text-white/30
+                      mb-3
+                    "
+                  >
+                    Stack
+                  </span>
 
-                    {/* Stack */}
-
-                    <div>
-                      <span
-                        className="
-                          block
-                          font-body
-                          text-[10px]
-                          tracking-widest
-                          uppercase
-                          text-white/30
-                          mb-3
-                        "
-                      >
-                        Stack
-                      </span>
-
-                      <p
-                        className="
-                          font-body
-                          text-sm
-                          text-white/60
-                        "
-                      >
-                        {project.stack}
-                      </p>
-                    </div>
-                  </div>
+                  <p
+                    className="
+                      font-body
+                      text-sm
+                      md:text-base
+                      leading-relaxed
+                      text-white/60
+                      max-w-md
+                    "
+                  >
+                    {project.stack}
+                  </p>
                 </div>
               </div>
             </div>
@@ -911,7 +843,7 @@ const ProjectPage = () => {
           md:px-10
           lg:px-16
           pb-5
-          md:pb-8
+          md:pb-7
           pointer-events-none
         "
       >
@@ -939,7 +871,7 @@ const ProjectPage = () => {
               className="
                 block
                 font-body
-                text-[10px]
+                text-[11px]
                 tracking-widest
                 uppercase
                 text-white/30
@@ -953,9 +885,9 @@ const ProjectPage = () => {
               data-project-title
               className="
                 font-hegarty
-                text-4xl
-                md:text-5xl
-                lg:text-6xl
+                text-5xl
+                md:text-6xl
+                lg:text-7xl
                 leading-none
                 uppercase
               "
@@ -972,7 +904,7 @@ const ProjectPage = () => {
               className="
                 block
                 font-body
-                text-[10px]
+                text-[11px]
                 tracking-widest
                 uppercase
                 text-white/30
@@ -986,7 +918,7 @@ const ProjectPage = () => {
               data-project-description
               className="
                 font-body
-                text-sm
+                text-base
                 leading-relaxed
                 text-white/60
                 max-w-xl
@@ -1004,7 +936,7 @@ const ProjectPage = () => {
               className="
                 block
                 font-body
-                text-[10px]
+                text-[11px]
                 tracking-widest
                 uppercase
                 text-white/30
@@ -1019,7 +951,7 @@ const ProjectPage = () => {
               className="
                 block
                 font-body
-                text-xs
+                text-sm
                 text-white/60
               "
             >
@@ -1031,7 +963,7 @@ const ProjectPage = () => {
               className="
                 block
                 font-body
-                text-xs
+                text-sm
                 text-white/40
                 mt-1
               "
@@ -1083,7 +1015,7 @@ const ProjectPage = () => {
                 data-project-title
                 className="
                   font-hegarty
-                  text-4xl
+                  text-5xl
                   leading-none
                   uppercase
                 "
@@ -1115,7 +1047,7 @@ const ProjectPage = () => {
                 className="
                   block
                   font-body
-                  text-[11px]
+                  text-xs
                   text-white/60
                 "
               >
@@ -1127,7 +1059,7 @@ const ProjectPage = () => {
                 className="
                   block
                   font-body
-                  text-[11px]
+                  text-xs
                   text-white/40
                   mt-1
                 "
@@ -1143,7 +1075,7 @@ const ProjectPage = () => {
             data-project-description
             className="
               font-body
-              text-xs
+              text-sm
               leading-relaxed
               text-white/50
               mt-5
@@ -1198,20 +1130,18 @@ const ProjectPage = () => {
               items-center
               gap-3
               font-body
-              text-xs
+              text-base
               tracking-widest
-              uppercase
               text-white/60
               hover:text-white
               transition-colors
             "
           >
-            <span>
-              Next project
-            </span>
+            <span>Next project</span>
 
             <span
               className="
+                text-lg
                 transition-transform
                 duration-300
                 group-hover:translate-x-1

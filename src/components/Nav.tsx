@@ -176,7 +176,7 @@ const Nav = () => {
               ease-out
             "
           >
-            <DecryptedText text="work" animateOn="hover" clickMode="once" />
+            <DecryptedText text="Work" animateOn="hover" clickMode="once" />
           </a>
 
           <a
@@ -191,7 +191,7 @@ const Nav = () => {
               ease-out
             "
           >
-            <DecryptedText text="about" animateOn="hover" clickMode="once" />
+            <DecryptedText text="About" animateOn="hover" clickMode="once" />
           </a>
 
           <a
@@ -206,7 +206,7 @@ const Nav = () => {
               ease-out
             "
           >
-            <DecryptedText text="contact" animateOn="hover" clickMode="once" />
+            <DecryptedText text="Contact" animateOn="hover" clickMode="once" />
           </a>
         </div>
 

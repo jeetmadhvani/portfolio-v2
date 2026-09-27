@@ -57,6 +57,7 @@ const SectionCTA = ({
           bottom-0
           h-0
           bg-[#999999]
+          text-[#999999]
           transition-[height]
           duration-300
           ease-out

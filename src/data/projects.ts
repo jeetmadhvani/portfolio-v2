@@ -37,7 +37,7 @@ export const projects: Record<string, Project> = {
     stack: "React · TypeScript · Tailwind",
     image: "/project-media/harbor-dashboard.png",
     description:
-      "A CRM built for freelancers to manage leads, clients, tasks, and follow ups in one place.",
+      "A simple CRM designed to help freelancers manage leads, clients, and follow ups in one place.",
     link: "/work/harbor",
 
     visual: {
@@ -48,13 +48,12 @@ export const projects: Record<string, Project> = {
 
     caseStudy: {
       problem:
-        "Freelancers often have leads, tasks and client information scattered across different tools.",
+        "Freelancers need a clearer way to keep track of leads and client work.",
 
       approach:
-        "Harbor brings the client workflow into one focused interface, keeping leads, follow ups and tasks visible without adding unnecessary complexity.",
+        "I designed Harbor around a clean dashboard that keeps important client information and next steps easy to see.",
 
-      role:
-        "Product design + frontend development",
+      role: "Product design + frontend development",
     },
 
     year: "2026",
@@ -95,7 +94,7 @@ export const projects: Record<string, Project> = {
     stack: "React · TypeScript · Tailwind",
     image: "/project-media/baithak-hero.png",
     description:
-      "A fictional café website built around atmosphere, typography, and a simple browsing experience.",
+      "A café website designed to bring the warmth and character of the space online.",
     link: "/work/baithak",
 
     visual: {
@@ -106,13 +105,12 @@ export const projects: Record<string, Project> = {
 
     caseStudy: {
       problem:
-        "The goal was to create a café website that felt atmospheric without making the browsing experience complicated.",
+        "The website needed to capture the atmosphere of the café, not just present information.",
 
       approach:
-        "The design uses typography, spacing and restrained motion to make the brand feel present while keeping the menu and information easy to reach.",
+        "I used photography, typography, and spacious layouts to make the digital experience feel as warm as the physical space.",
 
-      role:
-        "UI design + frontend development",
+      role: "UI design + frontend development",
     },
 
     year: "2026",
@@ -153,7 +151,7 @@ export const projects: Record<string, Project> = {
     stack: "React · TypeScript · Tailwind",
     image: "/project-media/scribe-hero.png",
     description:
-      "An exploration into a writing tool that learns how you write and helps you create in your own voice.",
+      "A writing tool concept that learns your writing style and helps you create in your own voice.",
     link: "/work/scribe",
 
     visual: {
@@ -164,13 +162,12 @@ export const projects: Record<string, Project> = {
 
     caseStudy: {
       problem:
-        "Most writing tools help generate text, but don't necessarily preserve the way an individual actually writes.",
+        "AI generated writing often feels generic and loses the personality of the person using it.",
 
       approach:
-        "Scribe explores a writing workflow where the system learns from a user's existing writing and uses it as the foundation for generation.",
+        "I designed Scribe around learning from your existing writing so generated content feels more personal and natural.",
 
-      role:
-        "Product concept + UI design + frontend",
+      role: "Product concept + UI design + frontend",
     },
 
     year: "2026",

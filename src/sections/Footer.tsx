@@ -6,10 +6,11 @@ import SectionCTA from "../components/SectionCTA";
 gsap.registerPlugin(ScrollTrigger);
 
 const Footer = () => {
-  const footerRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
 
   const wordRefs = useRef<HTMLSpanElement[]>([]);
-  const linksRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
 
   const addWordRef = (el: HTMLSpanElement | null) => {
     if (el && !wordRefs.current.includes(el)) {
@@ -18,152 +19,247 @@ const Footer = () => {
   };
 
   useEffect(() => {
-    const footer = footerRef.current;
+    const section = sectionRef.current;
+    const heading = headingRef.current;
+    const cta = ctaRef.current;
 
-    if (!footer || !linksRef.current || !wordRefs.current.length) {
-      return;
-    }
+    if (!section || !heading || !cta) return;
 
     const ctx = gsap.context(() => {
-      const words = wordRefs.current;
-      const links = linksRef.current;
+      const buttons = cta.querySelectorAll<HTMLAnchorElement>("a");
 
-      gsap.set(words, {
+      if (!buttons.length || !wordRefs.current.length) return;
+
+      const buttonTexts = Array.from(buttons).flatMap((button) =>
+        Array.from(button.querySelectorAll("span.relative")),
+      );
+
+      /*
+       * INITIAL STATES
+       */
+
+      gsap.set(wordRefs.current, {
         yPercent: 110,
       });
 
-      gsap.set(links, {
+      gsap.set(buttons, {
+        clipPath: "inset(0 100% 0 0)",
+      });
+
+      gsap.set(buttonTexts, {
         opacity: 0,
-        y: 35,
       });
 
-      const tl = gsap.timeline({
-        paused: true,
+      /*
+       * HEADING ANIMATION
+       * Kept exactly the same.
+       */
+
+      const headingTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 60%",
+          end: "bottom 75%",
+          scrub: 0.5,
+        },
       });
 
-      tl.to(words, {
+      headingTl.to(wordRefs.current, {
         yPercent: 0,
         duration: 1,
-        stagger: 0.15,
+        stagger: 0.12,
         ease: "power4.out",
-      }).to(
-        links,
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.55,
-          ease: "power3.out",
-        },
-        "-=0.2",
-      );
-
-      ScrollTrigger.create({
-        trigger: footer,
-        start: "top 65%",
-        end: "top 25%",
-        animation: tl,
-        scrub: 0.5,
       });
-    }, footerRef);
 
-    return () => {
-      ctx.revert();
-    };
+      /*
+       * CTA ANIMATION
+       */
+
+      const ctaTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 40%",
+          end: "bottom 95%",
+          scrub: 0.5,
+        },
+      });
+
+      /*
+       * CTA borders
+       * All reveal together.
+       */
+
+      ctaTl.to(buttons, {
+        clipPath: "inset(0 0% 0 0)",
+        duration: 0.3,
+        ease: "power2.out",
+      });
+
+      /*
+       * CTA text
+       * All reveal together.
+       */
+
+      ctaTl.to(buttonTexts, {
+        opacity: 1,
+        duration: 0.15,
+        stagger: 0,
+        ease: "power2.out",
+      });
+    }, section);
+
+    return () => ctx.revert();
   }, []);
 
   return (
-    <footer
-      ref={footerRef}
-      data-trail="#ff2200"
+    <section
+      ref={sectionRef}
+      data-trail="#999999"
       className="
-        px-8 md:px-16
-        py-16 md:py-24
-        flex flex-col
-        pointer-events-none
+        relative
+        shrink-0
+        h-screen
+        px-8
+        md:px-16
+        py-16
+        md:py-24
+        flex
+        flex-col
       "
     >
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
-        {/* Section label */}
-        <div className="col-span-1">
-          <span className="text-xs font-body opacity-50 tracking-widest uppercase">
+      {/* CONTENT */}
+
+      <div
+        className="
+          mt-auto
+          mb-auto
+          md:grid
+          md:grid-cols-4
+          md:gap-8
+          items-start
+        "
+      >
+        {/* CONTACT LABEL */}
+
+        <div className="md:col-span-1">
+          <span
+            className="
+              text-xs
+              font-body
+              opacity-50
+              tracking-widest
+              uppercase
+            "
+          >
             04 — Contact
           </span>
         </div>
 
-        {/* Main content */}
-        <div className="col-span-1 md:col-span-3 flex flex-col">
-          {/* Headline */}
-          <h2
+        {/* MAIN CONTENT */}
+
+        <div className="md:col-start-2 md:col-span-3">
+
+          {/* HEADLINE */}
+
+          <div
+            ref={headingRef}
             className="
               font-hegarty
-              text-[clamp(44px,8vw,130px)]
-              leading-[0.9]
-              text-white/90
-              uppercase
-              mb-12
+              text-[clamp(48px,8vw,140px)]
+              leading-[0.88]
+              text-white
             "
           >
             <div className="overflow-hidden">
-              <span ref={addWordRef} className="inline-block">
-                Have
-              </span>{" "}
-              <span ref={addWordRef} className="inline-block">
-                something
+              <span
+                ref={addWordRef}
+                className="inline-block"
+              >
+                HAVE
               </span>
             </div>
 
             <div className="overflow-hidden">
-              <span ref={addWordRef} className="inline-block">
-                worth
-              </span>{" "}
-              <span ref={addWordRef} className="inline-block">
-                building?
+              <span
+                ref={addWordRef}
+                className="inline-block"
+              >
+                SOMETHING
               </span>
             </div>
-          </h2>
+
+            <div className="overflow-hidden">
+              <span
+                ref={addWordRef}
+                className="inline-block"
+              >
+                WORTH
+              </span>
+            </div>
+
+            <div className="overflow-hidden">
+              <span
+                ref={addWordRef}
+                className="inline-block"
+              >
+                BUILDING?
+              </span>
+            </div>
+          </div>
 
           {/* CTAs */}
-          <div className="flex flex-col">
-  {/* Email / primary CTA */}
-  <SectionCTA
-    text="jeetmadhvani@gmail.com"
-    href="mailto:contact@jeetmadhvani.com"
-    className="
-      text-[clamp(16px,2vw,24px)]
-      py-3 md:py-4
-    "
-  />
 
-  {/* Socials */}
-  <div className="grid grid-cols-1 md:grid-cols-2">
-    <div className="md:border-r md:border-white/30">
-      <SectionCTA
-        text="LinkedIn"
-        href="https://www.linkedin.com/in/jeet-madhvani-809724380/"
-        targetBlank
-        className="
-          text-[clamp(16px,2vw,24px)]
-          py-3 md:py-4
-        "
-      />
-    </div>
+          <div
+            ref={ctaRef}
+            className="
+              mt-10
+              md:mt-12
+              w-full
+            "
+          >
+            {/* EMAIL */}
 
-    <div>
-      <SectionCTA
-        text="GitHub"
-        href="https://github.com/jeetmadhvani"
-        targetBlank
-        className="
-          text-[clamp(16px,2vw,24px)]
-          py-3 md:py-4
-        "
-      />
-    </div>
-  </div>
-</div>
+            <SectionCTA
+              text="jeetmadhvani@gmail.com"
+              href="mailto:jeetmadhvani@gmail.com"
+              className="
+                text-[clamp(16px,2vw,24px)]
+                py-4
+                md:py-5
+              "
+            />
+
+            {/* SOCIALS */}
+
+            <div className="grid grid-cols-1 md:grid-cols-2">
+              <SectionCTA
+                text="LinkedIn"
+                href="https://www.linkedin.com"
+                targetBlank
+                className="
+                  text-[clamp(16px,2vw,24px)]
+                  py-4
+                  md:py-5
+                  md:border-r
+                  md:border-r-white/30
+                "
+              />
+
+              <SectionCTA
+                text="GitHub"
+                href="https://github.com"
+                targetBlank
+                className="
+                  text-[clamp(16px,2vw,24px)]
+                  py-4
+                  md:py-5
+                "
+              />
+            </div>
+          </div>
         </div>
       </div>
-    </footer>
+    </section>
   );
 };
 

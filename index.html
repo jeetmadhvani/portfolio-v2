@@ -2,11 +2,20 @@
 <html lang="en">
 
 <head>
+  <script>
+    if (
+      sessionStorage.getItem("portfolio-scroll-target") === "work"
+    ) {
+      document.documentElement.style.backgroundColor = "#0A0A0A";
+      document.body.style.backgroundColor = "#0A0A0A";
+    }
+  </script>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jeet Madhvani — Design Engineer</title>
-  <meta name="description" content="Portfolio of Jeet Madhvani — Design engineer building websites that look sharp, feel considered, and move the needle." />
+  <meta name="description"
+    content="Portfolio of Jeet Madhvani — Design engineer building websites that look sharp, feel considered, and move the needle." />
   <meta name="theme-color" content="#500000" />
 </head>
 
