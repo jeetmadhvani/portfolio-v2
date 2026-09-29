@@ -111,18 +111,6 @@ const AboutSection = () => {
             </p>
           </Reveal>
         </div>
-
-        {/* CTA */}
-        <div ref={ctaRef} className="w-full">
-          <SectionCTA
-            text="Let's work together."
-            href="mailto:contact@jeetmadhvani.com"
-            className="
-              text-[clamp(16px,2vw,24px)]
-              py-3 md:py-4
-            "
-          />
-        </div>
       </div>
     </section>
   );
