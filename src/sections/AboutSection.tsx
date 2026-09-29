@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Reveal from "../components/Reveal";
-import SectionCTA from "../components/SectionCTA";
 
 gsap.registerPlugin(ScrollTrigger);
 
