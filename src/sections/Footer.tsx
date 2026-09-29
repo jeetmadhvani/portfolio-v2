@@ -26,12 +26,16 @@ const Footer = () => {
     if (!section || !heading || !cta) return;
 
     const ctx = gsap.context(() => {
-      const buttons = cta.querySelectorAll<HTMLAnchorElement>("a");
+      const buttons =
+        cta.querySelectorAll<HTMLAnchorElement>("a");
 
       if (!buttons.length || !wordRefs.current.length) return;
 
-      const buttonTexts = Array.from(buttons).flatMap((button) =>
-        Array.from(button.querySelectorAll("span.relative")),
+      const buttonTexts = Array.from(buttons).flatMap(
+        (button) =>
+          Array.from(
+            button.querySelectorAll("span.relative"),
+          ),
       );
 
       /*
@@ -52,7 +56,6 @@ const Footer = () => {
 
       /*
        * HEADING ANIMATION
-       * Kept exactly the same.
        */
 
       const headingTl = gsap.timeline({
@@ -85,8 +88,7 @@ const Footer = () => {
       });
 
       /*
-       * CTA borders
-       * All reveal together.
+       * CTA BORDERS
        */
 
       ctaTl.to(buttons, {
@@ -96,8 +98,7 @@ const Footer = () => {
       });
 
       /*
-       * CTA text
-       * All reveal together.
+       * CTA TEXT
        */
 
       ctaTl.to(buttonTexts, {
@@ -133,6 +134,9 @@ const Footer = () => {
         className="
           mt-auto
           mb-auto
+          flex
+          flex-col
+          gap-12
           md:grid
           md:grid-cols-4
           md:gap-8
@@ -158,14 +162,14 @@ const Footer = () => {
         {/* MAIN CONTENT */}
 
         <div className="md:col-start-2 md:col-span-3">
-
           {/* HEADLINE */}
 
           <div
             ref={headingRef}
             className="
               font-hegarty
-              text-[clamp(48px,8vw,140px)]
+              text-[clamp(42px,11vw,72px)]
+              md:text-[clamp(48px,8vw,140px)]
               leading-[0.88]
               text-white
             "
@@ -212,7 +216,7 @@ const Footer = () => {
           <div
             ref={ctaRef}
             className="
-              mt-10
+              mt-12
               md:mt-12
               w-full
             "
