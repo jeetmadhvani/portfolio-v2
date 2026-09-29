@@ -16,11 +16,9 @@ const ProjectPage = () => {
 
   const targetX = useRef(0);
   const currentX = useRef(0);
-
   const pendingMovement = useRef(0);
 
   const introFinished = useRef(false);
-
   const activeIndexRef = useRef(0);
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -28,8 +26,11 @@ const ProjectPage = () => {
   /*
    * PROJECT PAGE THEME COLOR
    */
+
   useEffect(() => {
-    const meta = document.querySelector('meta[name="theme-color"]');
+    const meta = document.querySelector(
+      'meta[name="theme-color"]',
+    );
 
     if (meta) {
       meta.setAttribute("content", "#0A0A0A");
@@ -43,8 +44,21 @@ const ProjectPage = () => {
   }, []);
 
   /*
+   * ALWAYS START NEW PROJECT AT THE TOP
+   */
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  }, [slug]);
+
+  /*
    * RESET WHEN PROJECT CHANGES
    */
+
   useEffect(() => {
     targetX.current = 0;
     currentX.current = 0;
@@ -57,9 +71,14 @@ const ProjectPage = () => {
 
   /*
    * PROJECT ANIMATION
+   *
+   * Desktop only.
    */
+
   useEffect(() => {
     if (!project) return;
+
+    if (window.innerWidth < 768) return;
 
     const page = pageRef.current;
     const track = trackRef.current;
@@ -67,20 +86,27 @@ const ProjectPage = () => {
     if (!page || !track) return;
 
     const ctx = gsap.context(() => {
-      const header = page.querySelector("[data-project-header]");
+      const header = page.querySelector(
+        "[data-project-header]",
+      );
 
-      const title = page.querySelector("[data-project-title]");
+      const title = page.querySelector(
+        "[data-project-title]",
+      );
 
       const description = page.querySelector(
         "[data-project-description]",
       );
 
-      const meta = page.querySelectorAll("[data-project-meta]");
+      const meta = page.querySelectorAll(
+        "[data-project-meta]",
+      );
 
       /*
        * Only actual gallery items count
        * toward the image index.
        */
+
       const getItems = () =>
         Array.from(
           track.querySelectorAll<HTMLElement>(
@@ -98,18 +124,21 @@ const ProjectPage = () => {
        * Find gallery item closest
        * to viewport center.
        */
+
       const updateActiveIndex = () => {
         const items = getItems();
 
         if (!items.length) return;
 
-        const viewportCenter = window.innerWidth / 2;
+        const viewportCenter =
+          window.innerWidth / 2;
 
         let closestIndex = 0;
         let closestDistance = Infinity;
 
         items.forEach((item, index) => {
-          const rect = item.getBoundingClientRect();
+          const rect =
+            item.getBoundingClientRect();
 
           const itemCenter =
             rect.left + rect.width / 2;
@@ -139,6 +168,7 @@ const ProjectPage = () => {
        * Subtle image movement based
        * on distance from center.
        */
+
       const updateItems = () => {
         const items = getItems();
 
@@ -190,6 +220,7 @@ const ProjectPage = () => {
       /*
        * Smooth horizontal movement.
        */
+
       const updatePosition = () => {
         if (!introFinished.current) {
           return;
@@ -227,6 +258,7 @@ const ProjectPage = () => {
       /*
        * Start gallery off-screen.
        */
+
       gsap.set(track, {
         x: window.innerWidth,
       });
@@ -254,6 +286,7 @@ const ProjectPage = () => {
       /*
        * INTRO ANIMATION
        */
+
       const introTl = gsap.timeline();
 
       introTl.to(track, {
@@ -333,6 +366,7 @@ const ProjectPage = () => {
       /*
        * HORIZONTAL INPUT
        */
+
       const observer = Observer.create({
         target: window,
         type: "wheel,touch,pointer",
@@ -347,13 +381,8 @@ const ProjectPage = () => {
               ? self.deltaX
               : self.deltaY;
 
-          const sensitivity =
-            window.innerWidth < 768
-              ? 2.2
-              : 0.85;
-
           const delta =
-            movement * sensitivity;
+            movement * 0.85;
 
           if (!introFinished.current) {
             pendingMovement.current +=
@@ -378,6 +407,7 @@ const ProjectPage = () => {
       /*
        * GSAP TICKER
        */
+
       const ticker = () => {
         updatePosition();
       };
@@ -387,6 +417,7 @@ const ProjectPage = () => {
       /*
        * RESIZE
        */
+
       const handleResize = () => {
         if (!introFinished.current) {
           return;
@@ -433,13 +464,61 @@ const ProjectPage = () => {
   }, [slug, project]);
 
   /*
+   * MOBILE IMAGE INDEX
+   */
+
+  useEffect(() => {
+    if (!project) return;
+
+    if (window.innerWidth >= 768) return;
+
+    const items =
+      document.querySelectorAll<HTMLElement>(
+        "[data-mobile-gallery-item]",
+      );
+
+    if (!items.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const index = Number(
+            entry.target.getAttribute(
+              "data-mobile-index",
+            ),
+          );
+
+          if (!Number.isNaN(index)) {
+            setActiveIndex(index);
+          }
+        });
+      },
+      {
+        root: null,
+        threshold: 0.6,
+      },
+    );
+
+    items.forEach((item) => {
+      observer.observe(item);
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [slug, project]);
+
+  /*
    * INVALID PROJECT
    */
+
   if (!project) {
     return (
       <main
         className="
-          h-screen
+          min-h-[100dvh]
           w-screen
           bg-[#0A0A0A]
           text-white
@@ -450,7 +529,8 @@ const ProjectPage = () => {
       >
         <button
           onClick={() => {
-            window.location.href = "/#work";
+            window.location.href =
+              "/#work";
           }}
           className="
             font-body
@@ -487,13 +567,12 @@ const ProjectPage = () => {
   /*
    * BACK TO WORK
    */
+
   const handleBackToWork = () => {
     sessionStorage.setItem(
       "portfolio-scroll-target",
       "work",
     );
-
-    window.location.href = "/";
   };
 
   return (
@@ -504,8 +583,10 @@ const ProjectPage = () => {
         relative
         isolate
         w-screen
-        h-screen
-        overflow-hidden
+        min-h-[100dvh]
+        md:h-[100dvh]
+        overflow-x-hidden
+        md:overflow-hidden
         bg-[#0A0A0A]
         text-white
         noise
@@ -523,18 +604,24 @@ const ProjectPage = () => {
           left-0
           right-0
           z-50
-          px-6
+          pointer-events-auto
+          px-5
+          sm:px-6
           md:px-10
           lg:px-16
           py-5
           md:py-7
         "
       >
-        <button
+        <Link
+          to="/"
           onClick={handleBackToWork}
           className="
+            relative
+            z-[100]
             font-body
-            text-base
+            text-sm
+            md:text-base
             tracking-widest
             text-white/50
             hover:text-white
@@ -543,29 +630,31 @@ const ProjectPage = () => {
             cursor-pointer
             flex
             items-center
-            gap-3
+            gap-2
+            md:gap-3
           "
         >
           <span>←</span>
           <span>Work</span>
-        </button>
+        </Link>
       </header>
 
       {/* ================================================== */}
-      {/* HORIZONTAL CONTENT */}
+      {/* DESKTOP PROJECT */}
       {/* ================================================== */}
 
       <div
-  className="
-    absolute
-    inset-0
-    bottom-[80px]
-    md:bottom-[85px]
-    lg:bottom-[90px]
-    z-10
-    overflow-hidden
-  "
->
+        className="
+          hidden
+          md:block
+          absolute
+          inset-0
+          bottom-[85px]
+          lg:bottom-[90px]
+          z-10
+          overflow-hidden
+        "
+      >
         <div
           ref={trackRef}
           className="
@@ -576,16 +665,13 @@ const ProjectPage = () => {
             flex
             items-center
             gap-[7vw]
-            px-[9vw]
-            md:px-[10vw]
+            px-[10vw]
             lg:px-[12vw]
             w-max
             will-change-transform
           "
         >
-          {/* ================================================== */}
           {/* MEDIA */}
-          {/* ================================================== */}
 
           {galleryMedia.map(
             (item, index) => (
@@ -595,8 +681,7 @@ const ProjectPage = () => {
                 className="
                   relative
                   shrink-0
-                  w-[82vw]
-                  md:w-[65vw]
+                  w-[65vw]
                   lg:w-[55vw]
                   max-w-[1000px]
                   will-change-transform
@@ -646,17 +731,14 @@ const ProjectPage = () => {
             ),
           )}
 
-          {/* ================================================== */}
           {/* CASE STUDY */}
-          {/* ================================================== */}
 
           <div
             data-case-study
             className="
               relative
               shrink-0
-              w-[82vw]
-              md:w-[65vw]
+              w-[65vw]
               lg:w-[55vw]
               max-w-[1000px]
               h-full
@@ -759,6 +841,8 @@ const ProjectPage = () => {
                   mt-14
                   md:mt-16
                   pt-6
+                  border-t
+                  border-white/10
                 "
               >
                 {/* ROLE */}
@@ -829,11 +913,442 @@ const ProjectPage = () => {
       </div>
 
       {/* ================================================== */}
-      {/* BOTTOM INFORMATION */}
+      {/* MOBILE PROJECT */}
       {/* ================================================== */}
 
       <div
         className="
+          md:hidden
+          pt-24
+          px-5
+          pb-8
+        "
+      >
+        {/* ================================================== */}
+        {/* MOBILE PROJECT INFO */}
+        {/* ================================================== */}
+
+        <div
+          className="
+            border-t
+            border-white/20
+            pt-5
+          "
+        >
+          {/* PROJECT NUMBER */}
+
+          <span
+            className="
+              block
+              font-body
+              text-[10px]
+              tracking-widest
+              uppercase
+              text-white/30
+              mb-2
+            "
+          >
+            {project.number}
+          </span>
+
+          {/* PROJECT NAME */}
+
+          <h1
+            className="
+              font-hegarty
+              text-[clamp(52px,16vw,78px)]
+              leading-[0.85]
+              uppercase
+            "
+          >
+            {project.name}
+          </h1>
+
+          {/* CATEGORY + YEAR */}
+
+          <div
+            className="
+              mt-6
+              flex
+              items-end
+              justify-between
+              gap-6
+            "
+          >
+            <div>
+              <span
+                className="
+                  block
+                  font-body
+                  text-[9px]
+                  tracking-widest
+                  uppercase
+                  text-white/30
+                  mb-2
+                "
+              >
+                Category
+              </span>
+
+              <span
+                className="
+                  block
+                  font-body
+                  text-sm
+                  text-white/60
+                "
+              >
+                {project.category}
+              </span>
+            </div>
+
+            <span
+              className="
+                font-body
+                text-sm
+                text-white/40
+              "
+            >
+              {project.year}
+            </span>
+          </div>
+
+          {/* DESCRIPTION */}
+
+          <p
+            className="
+              font-body
+              text-sm
+              leading-relaxed
+              text-white/60
+              mt-6
+              max-w-xl
+            "
+          >
+            {project.description}
+          </p>
+        </div>
+
+        {/* ================================================== */}
+        {/* MOBILE GALLERY */}
+        {/* ================================================== */}
+
+        <div
+          className="
+            mt-10
+            space-y-8
+          "
+        >
+          {galleryMedia.map(
+            (item, index) => (
+              <div
+                key={`${item.src}-mobile-${index}`}
+                data-mobile-gallery-item
+                data-mobile-index={index}
+                className="w-full"
+              >
+                <div
+                  className="
+                    w-full
+                    aspect-video
+                    overflow-hidden
+                    bg-white/[0.03]
+                  "
+                >
+                  {item.type === "image" ? (
+                    <img
+                      src={item.src}
+                      alt={
+                        item.alt ??
+                        `${project.name} screenshot`
+                      }
+                      draggable={false}
+                      className="
+                        block
+                        w-full
+                        h-full
+                        object-contain
+                        select-none
+                      "
+                    />
+                  ) : (
+                    <video
+                      src={item.src}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="
+                        block
+                        w-full
+                        h-full
+                        object-contain
+                      "
+                    />
+                  )}
+                </div>
+
+                <span
+                  className="
+                    block
+                    font-body
+                    text-[9px]
+                    tracking-widest
+                    uppercase
+                    text-white/25
+                    mt-2
+                  "
+                >
+                  {String(index + 1).padStart(
+                    2,
+                    "0",
+                  )}{" "}
+                  /{" "}
+                  {String(
+                    galleryMedia.length,
+                  ).padStart(2, "0")}
+                </span>
+              </div>
+            ),
+          )}
+        </div>
+
+        {/* ================================================== */}
+        {/* MOBILE CASE STUDY */}
+        {/* ================================================== */}
+
+        <div
+          className="
+            mt-16
+            border-t
+            border-white/20
+            pt-8
+          "
+        >
+          {/* PROBLEM */}
+
+          <div>
+            <span
+              className="
+                block
+                font-body
+                text-[10px]
+                tracking-widest
+                uppercase
+                text-white/30
+                mb-4
+              "
+            >
+              The problem
+            </span>
+
+            <p
+              className="
+                font-body
+                text-base
+                leading-relaxed
+                text-white/70
+              "
+            >
+              {project.caseStudy.problem}
+            </p>
+          </div>
+
+          {/* APPROACH */}
+
+          <div className="mt-12">
+            <span
+              className="
+                block
+                font-body
+                text-[10px]
+                tracking-widest
+                uppercase
+                text-white/30
+                mb-4
+              "
+            >
+              The approach
+            </span>
+
+            <p
+              className="
+                font-body
+                text-base
+                leading-relaxed
+                text-white/70
+              "
+            >
+              {project.caseStudy.approach}
+            </p>
+          </div>
+
+          {/* ROLE + STACK */}
+
+          <div
+            className="
+              mt-12
+              pt-6
+              border-t
+              border-white/10
+              grid
+              grid-cols-1
+              gap-8
+            "
+          >
+            {/* ROLE */}
+
+            <div>
+              <span
+                className="
+                  block
+                  font-body
+                  text-[10px]
+                  tracking-widest
+                  uppercase
+                  text-white/30
+                  mb-3
+                "
+              >
+                My role
+              </span>
+
+              <p
+                className="
+                  font-body
+                  text-sm
+                  leading-relaxed
+                  text-white/60
+                "
+              >
+                {project.caseStudy.role}
+              </p>
+            </div>
+
+            {/* STACK */}
+
+            <div>
+              <span
+                className="
+                  block
+                  font-body
+                  text-[10px]
+                  tracking-widest
+                  uppercase
+                  text-white/30
+                  mb-3
+                "
+              >
+                Stack
+              </span>
+
+              <p
+                className="
+                  font-body
+                  text-sm
+                  leading-relaxed
+                  text-white/60
+                "
+              >
+                {project.stack}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ================================================== */}
+        {/* MOBILE NEXT PROJECT */}
+        {/* ================================================== */}
+
+        <div
+          className="
+            mt-16
+            pt-5
+            border-t
+            border-white/20
+            flex
+            items-center
+            justify-between
+            gap-4
+          "
+        >
+          {/* IMAGE INDEX */}
+
+          <span
+            className="
+              shrink-0
+              font-body
+              text-[10px]
+              tracking-widest
+              uppercase
+              text-white/30
+            "
+          >
+            {String(
+              activeIndex + 1,
+            ).padStart(2, "0")}{" "}
+            /{" "}
+            {String(
+              galleryMedia.length,
+            ).padStart(2, "0")}
+          </span>
+
+          {/* NEXT */}
+
+          <Link
+            to={`/work/${nextSlug}`}
+            onClick={() => {
+              window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: "auto",
+              });
+            }}
+            className="
+              pointer-events-auto
+              group
+              flex
+              items-center
+              gap-2
+              font-body
+              text-sm
+              tracking-widest
+              text-white/60
+              hover:text-white
+              transition-colors
+              min-w-0
+            "
+          >
+            <span className="hidden sm:inline">
+              Next project
+            </span>
+
+            <span
+              className="
+                text-lg
+                transition-transform
+                duration-300
+                group-hover:translate-x-1
+              "
+            >
+              →
+            </span>
+
+            <span className="text-white truncate">
+              {nextProject.name}
+            </span>
+          </Link>
+        </div>
+      </div>
+
+      {/* ================================================== */}
+      {/* DESKTOP BOTTOM INFORMATION */}
+      {/* ================================================== */}
+
+      <div
+        className="
+          hidden
+          md:block
           absolute
           bottom-0
           left-0
@@ -847,18 +1362,15 @@ const ProjectPage = () => {
           pointer-events-none
         "
       >
-        {/* ================================================== */}
-        {/* DESKTOP */}
-        {/* ================================================== */}
+        {/* PROJECT INFO */}
 
         <div
           className="
             border-t
             border-white/20
             pt-4
-            hidden
-            md:grid
-            md:grid-cols-[1fr_2fr_1fr]
+            grid
+            grid-cols-[1fr_2fr_1fr]
             gap-8
             items-start
           "
@@ -973,122 +1485,7 @@ const ProjectPage = () => {
           </div>
         </div>
 
-        {/* ================================================== */}
-        {/* MOBILE */}
-        {/* ================================================== */}
-
-        <div
-          className="
-            md:hidden
-            border-t
-            border-white/20
-            pt-4
-          "
-        >
-          <div
-            className="
-              grid
-              grid-cols-[1fr_auto]
-              gap-6
-              items-start
-            "
-          >
-            {/* PROJECT */}
-
-            <div>
-              <span
-                data-project-meta
-                className="
-                  block
-                  font-body
-                  text-[10px]
-                  tracking-widest
-                  uppercase
-                  text-white/30
-                  mb-2
-                "
-              >
-                {project.number}
-              </span>
-
-              <h1
-                data-project-title
-                className="
-                  font-hegarty
-                  text-5xl
-                  leading-none
-                  uppercase
-                "
-              >
-                {project.name}
-              </h1>
-            </div>
-
-            {/* CATEGORY */}
-
-            <div className="text-right">
-              <span
-                data-project-meta
-                className="
-                  block
-                  font-body
-                  text-[10px]
-                  tracking-widest
-                  uppercase
-                  text-white/30
-                  mb-2
-                "
-              >
-                Category
-              </span>
-
-              <span
-                data-project-meta
-                className="
-                  block
-                  font-body
-                  text-xs
-                  text-white/60
-                "
-              >
-                {project.category}
-              </span>
-
-              <span
-                data-project-meta
-                className="
-                  block
-                  font-body
-                  text-xs
-                  text-white/40
-                  mt-1
-                "
-              >
-                {project.year}
-              </span>
-            </div>
-          </div>
-
-          {/* DESCRIPTION */}
-
-          <p
-            data-project-description
-            className="
-              font-body
-              text-sm
-              leading-relaxed
-              text-white/50
-              mt-5
-              max-w-[90vw]
-            "
-          >
-            {project.description}
-          </p>
-        </div>
-
-        {/* ================================================== */}
         {/* NAVIGATION */}
-        {/* ================================================== */}
 
         <div
           className="
@@ -1123,6 +1520,13 @@ const ProjectPage = () => {
 
           <Link
             to={`/work/${nextSlug}`}
+            onClick={() => {
+              window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: "auto",
+              });
+            }}
             className="
               pointer-events-auto
               group
@@ -1137,7 +1541,9 @@ const ProjectPage = () => {
               transition-colors
             "
           >
-            <span>Next project</span>
+            <span>
+              Next project
+            </span>
 
             <span
               className="
