@@ -21,6 +21,8 @@ const ProjectPage = () => {
   const introFinished = useRef(false);
   const activeIndexRef = useRef(0);
 
+  const mobileNextNavigation = useRef(false);
+
   const [activeIndex, setActiveIndex] = useState(0);
 
   /*
@@ -44,14 +46,34 @@ const ProjectPage = () => {
   }, []);
 
   /*
-   * ALWAYS START NEW PROJECT AT THE TOP
+   * MOBILE NEXT PROJECT SCROLL
+   *
+   * The mobile page itself is the
+   * scroll container, not window.
    */
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "auto",
+    if (!mobileNextNavigation.current) return;
+
+    if (window.innerWidth >= 768) {
+      mobileNextNavigation.current = false;
+      return;
+    }
+
+    const page = pageRef.current;
+
+    if (!page) return;
+
+    requestAnimationFrame(() => {
+      gsap.to(page, {
+        scrollTop: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        overwrite: true,
+        onComplete: () => {
+          mobileNextNavigation.current = false;
+        },
+      });
     });
   }, [slug]);
 
@@ -575,6 +597,16 @@ const ProjectPage = () => {
     );
   };
 
+  /*
+   * NEXT PROJECT
+   */
+
+  const handleNextProject = () => {
+    if (window.innerWidth < 768) {
+      mobileNextNavigation.current = true;
+    }
+  };
+
   return (
     <main
       ref={pageRef}
@@ -583,10 +615,13 @@ const ProjectPage = () => {
         relative
         isolate
         w-screen
-        min-h-[100dvh]
+        h-[100dvh]
         md:h-[100dvh]
         overflow-x-hidden
+        overflow-y-auto
         md:overflow-hidden
+        overscroll-y-auto
+        touch-pan-y
         bg-[#0A0A0A]
         text-white
         noise
@@ -664,9 +699,9 @@ const ProjectPage = () => {
             h-full
             flex
             items-center
-            gap-[7vw]
-            px-[10vw]
-            lg:px-[12vw]
+            gap-[clamp(36px,7vw,110px)]
+            px-[clamp(60px,10vw,180px)]
+            lg:px-[clamp(100px,12vw,190px)]
             w-max
             will-change-transform
           "
@@ -681,9 +716,8 @@ const ProjectPage = () => {
                 className="
                   relative
                   shrink-0
-                  w-[65vw]
-                  lg:w-[55vw]
-                  max-w-[1000px]
+                  w-[clamp(500px,65vw,1000px)]
+                  lg:w-[clamp(650px,55vw,1000px)]
                   will-change-transform
                 "
               >
@@ -738,10 +772,9 @@ const ProjectPage = () => {
             className="
               relative
               shrink-0
-              w-[65vw]
-              lg:w-[55vw]
-              max-w-[1000px]
-              h-full
+              w-[clamp(500px,65vw,1000px)]
+              lg:w-[clamp(650px,55vw,1000px)]
+              min-h-full
               flex
               items-center
             "
@@ -751,8 +784,7 @@ const ProjectPage = () => {
                 w-full
                 border-t
                 border-white/20
-                pt-8
-                md:pt-10
+                pt-[clamp(24px,2.5vw,40px)]
               "
             >
               {/* PROBLEM + APPROACH */}
@@ -762,8 +794,7 @@ const ProjectPage = () => {
                   grid
                   grid-cols-1
                   md:grid-cols-2
-                  gap-12
-                  md:gap-16
+                  gap-[clamp(32px,4vw,64px)]
                 "
               >
                 {/* PROBLEM */}
@@ -777,7 +808,7 @@ const ProjectPage = () => {
                       tracking-widest
                       uppercase
                       text-white/30
-                      mb-5
+                      mb-[clamp(16px,1.5vw,24px)]
                     "
                   >
                     The problem
@@ -786,8 +817,7 @@ const ProjectPage = () => {
                   <p
                     className="
                       font-body
-                      text-base
-                      md:text-lg
+                      text-[clamp(14px,1.25vw,18px)]
                       leading-relaxed
                       text-white/70
                       max-w-xl
@@ -808,7 +838,7 @@ const ProjectPage = () => {
                       tracking-widest
                       uppercase
                       text-white/30
-                      mb-5
+                      mb-[clamp(16px,1.5vw,24px)]
                     "
                   >
                     The approach
@@ -817,8 +847,7 @@ const ProjectPage = () => {
                   <p
                     className="
                       font-body
-                      text-base
-                      md:text-lg
+                      text-[clamp(14px,1.25vw,18px)]
                       leading-relaxed
                       text-white/70
                       max-w-xl
@@ -836,11 +865,9 @@ const ProjectPage = () => {
                   grid
                   grid-cols-1
                   md:grid-cols-2
-                  gap-10
-                  md:gap-16
-                  mt-14
-                  md:mt-16
-                  pt-6
+                  gap-[clamp(28px,4vw,64px)]
+                  mt-[clamp(36px,4vw,64px)]
+                  pt-[clamp(20px,1.5vw,24px)]
                   border-t
                   border-white/10
                 "
@@ -865,8 +892,7 @@ const ProjectPage = () => {
                   <p
                     className="
                       font-body
-                      text-sm
-                      md:text-base
+                      text-[clamp(13px,1.1vw,16px)]
                       leading-relaxed
                       text-white/60
                       max-w-md
@@ -896,8 +922,7 @@ const ProjectPage = () => {
                   <p
                     className="
                       font-body
-                      text-sm
-                      md:text-base
+                      text-[clamp(13px,1.1vw,16px)]
                       leading-relaxed
                       text-white/60
                       max-w-md
@@ -919,14 +944,12 @@ const ProjectPage = () => {
       <div
         className="
           md:hidden
-          pt-24
-          px-5
+          pt-[clamp(88px,24vw,110px)]
+          px-[clamp(20px,5vw,28px)]
           pb-8
         "
       >
-        {/* ================================================== */}
         {/* MOBILE PROJECT INFO */}
-        {/* ================================================== */}
 
         <div
           className="
@@ -956,9 +979,10 @@ const ProjectPage = () => {
           <h1
             className="
               font-hegarty
-              text-[clamp(52px,16vw,78px)]
+              text-[clamp(48px,16vw,78px)]
               leading-[0.85]
               uppercase
+              break-words
             "
           >
             {project.name}
@@ -994,7 +1018,7 @@ const ProjectPage = () => {
                 className="
                   block
                   font-body
-                  text-sm
+                  text-[clamp(12px,3.5vw,14px)]
                   text-white/60
                 "
               >
@@ -1005,7 +1029,7 @@ const ProjectPage = () => {
             <span
               className="
                 font-body
-                text-sm
+                text-[clamp(12px,3.5vw,14px)]
                 text-white/40
               "
             >
@@ -1018,7 +1042,7 @@ const ProjectPage = () => {
           <p
             className="
               font-body
-              text-sm
+              text-[clamp(13px,3.8vw,15px)]
               leading-relaxed
               text-white/60
               mt-6
@@ -1029,9 +1053,7 @@ const ProjectPage = () => {
           </p>
         </div>
 
-        {/* ================================================== */}
         {/* MOBILE GALLERY */}
-        {/* ================================================== */}
 
         <div
           className="
@@ -1113,9 +1135,7 @@ const ProjectPage = () => {
           )}
         </div>
 
-        {/* ================================================== */}
         {/* MOBILE CASE STUDY */}
-        {/* ================================================== */}
 
         <div
           className="
@@ -1145,7 +1165,7 @@ const ProjectPage = () => {
             <p
               className="
                 font-body
-                text-base
+                text-[clamp(14px,4vw,16px)]
                 leading-relaxed
                 text-white/70
               "
@@ -1174,7 +1194,7 @@ const ProjectPage = () => {
             <p
               className="
                 font-body
-                text-base
+                text-[clamp(14px,4vw,16px)]
                 leading-relaxed
                 text-white/70
               "
@@ -1216,7 +1236,7 @@ const ProjectPage = () => {
               <p
                 className="
                   font-body
-                  text-sm
+                  text-[clamp(13px,3.8vw,15px)]
                   leading-relaxed
                   text-white/60
                 "
@@ -1245,7 +1265,7 @@ const ProjectPage = () => {
               <p
                 className="
                   font-body
-                  text-sm
+                  text-[clamp(13px,3.8vw,15px)]
                   leading-relaxed
                   text-white/60
                 "
@@ -1256,9 +1276,7 @@ const ProjectPage = () => {
           </div>
         </div>
 
-        {/* ================================================== */}
         {/* MOBILE NEXT PROJECT */}
-        {/* ================================================== */}
 
         <div
           className="
@@ -1268,42 +1286,15 @@ const ProjectPage = () => {
             border-white/20
             flex
             items-center
-            justify-between
+            justify-end
             gap-4
           "
         >
-          {/* IMAGE INDEX */}
-
-          <span
-            className="
-              shrink-0
-              font-body
-              text-[10px]
-              tracking-widest
-              uppercase
-              text-white/30
-            "
-          >
-            {String(
-              activeIndex + 1,
-            ).padStart(2, "0")}{" "}
-            /{" "}
-            {String(
-              galleryMedia.length,
-            ).padStart(2, "0")}
-          </span>
-
           {/* NEXT */}
 
           <Link
             to={`/work/${nextSlug}`}
-            onClick={() => {
-              window.scrollTo({
-                top: 0,
-                left: 0,
-                behavior: "auto",
-              });
-            }}
+            onClick={handleNextProject}
             className="
               pointer-events-auto
               group
@@ -1311,7 +1302,7 @@ const ProjectPage = () => {
               items-center
               gap-2
               font-body
-              text-sm
+              text-[clamp(12px,3.8vw,15px)]
               tracking-widest
               text-white/60
               hover:text-white
@@ -1325,7 +1316,7 @@ const ProjectPage = () => {
 
             <span
               className="
-                text-lg
+                text-[clamp(16px,5vw,20px)]
                 transition-transform
                 duration-300
                 group-hover:translate-x-1
@@ -1354,11 +1345,8 @@ const ProjectPage = () => {
           left-0
           right-0
           z-40
-          px-6
-          md:px-10
-          lg:px-16
-          pb-5
-          md:pb-7
+          px-[clamp(24px,4vw,64px)]
+          pb-[clamp(20px,2vw,28px)]
           pointer-events-none
         "
       >
@@ -1370,20 +1358,21 @@ const ProjectPage = () => {
             border-white/20
             pt-4
             grid
-            grid-cols-[1fr_2fr_1fr]
-            gap-8
+            grid-cols-[minmax(0,1.2fr)_minmax(0,1.9fr)_minmax(120px,0.9fr)]
+            gap-[clamp(24px,3vw,48px)]
             items-start
           "
         >
           {/* PROJECT */}
 
-          <div className="min-w-0">
+          <div className="min-w-0 overflow-hidden">
             <span
               data-project-meta
               className="
                 block
                 font-body
-                text-[11px]
+                text-[10px]
+                md:text-[11px]
                 tracking-widest
                 uppercase
                 text-white/30
@@ -1397,11 +1386,10 @@ const ProjectPage = () => {
               data-project-title
               className="
                 font-hegarty
-                text-5xl
-                md:text-6xl
-                lg:text-7xl
-                leading-none
+                text-[clamp(38px,4.8vw,76px)]
+                leading-[0.9]
                 uppercase
+                whitespace-nowrap
               "
             >
               {project.name}
@@ -1416,7 +1404,8 @@ const ProjectPage = () => {
               className="
                 block
                 font-body
-                text-[11px]
+                text-[10px]
+                md:text-[11px]
                 tracking-widest
                 uppercase
                 text-white/30
@@ -1430,10 +1419,10 @@ const ProjectPage = () => {
               data-project-description
               className="
                 font-body
-                text-base
+                text-[clamp(13px,1.15vw,16px)]
                 leading-relaxed
                 text-white/60
-                max-w-xl
+                max-w-2xl
               "
             >
               {project.description}
@@ -1448,7 +1437,8 @@ const ProjectPage = () => {
               className="
                 block
                 font-body
-                text-[11px]
+                text-[10px]
+                md:text-[11px]
                 tracking-widest
                 uppercase
                 text-white/30
@@ -1463,8 +1453,9 @@ const ProjectPage = () => {
               className="
                 block
                 font-body
-                text-sm
+                text-[clamp(12px,1vw,14px)]
                 text-white/60
+                break-words
               "
             >
               {project.category}
@@ -1475,7 +1466,7 @@ const ProjectPage = () => {
               className="
                 block
                 font-body
-                text-sm
+                text-[clamp(12px,1vw,14px)]
                 text-white/40
                 mt-1
               "
@@ -1501,7 +1492,8 @@ const ProjectPage = () => {
           <span
             className="
               font-body
-              text-[10px]
+              text-[9px]
+              md:text-[10px]
               tracking-widest
               uppercase
               text-white/30
@@ -1520,25 +1512,19 @@ const ProjectPage = () => {
 
           <Link
             to={`/work/${nextSlug}`}
-            onClick={() => {
-              window.scrollTo({
-                top: 0,
-                left: 0,
-                behavior: "auto",
-              });
-            }}
             className="
               pointer-events-auto
               group
               flex
               items-center
-              gap-3
+              gap-[clamp(8px,1vw,14px)]
               font-body
-              text-base
+              text-[clamp(13px,1.25vw,16px)]
               tracking-widest
               text-white/60
               hover:text-white
               transition-colors
+              min-w-0
             "
           >
             <span>
@@ -1547,7 +1533,7 @@ const ProjectPage = () => {
 
             <span
               className="
-                text-lg
+                text-[clamp(18px,1.6vw,22px)]
                 transition-transform
                 duration-300
                 group-hover:translate-x-1
@@ -1556,7 +1542,7 @@ const ProjectPage = () => {
               →
             </span>
 
-            <span className="text-white">
+            <span className="text-white truncate">
               {nextProject.name}
             </span>
           </Link>
