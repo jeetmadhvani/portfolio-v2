@@ -373,21 +373,6 @@ const WorkSection = () => {
                       opacity: i === 0 ? 1 : 0,
                     }}
                   >
-                    {/* Number */}
-
-                    <span
-                      className="
-                        block
-                        mb-4
-                        text-xs
-                        font-body
-                        text-white/30
-                        tracking-widest
-                      "
-                    >
-                      {project.number}
-                    </span>
-
                     {/* Title */}
 
                     <h2
@@ -488,27 +473,16 @@ const WorkSection = () => {
               key={project.number}
               className="w-full"
             >
-              {/* Project number */}
+              {/* Project index */}
 
               <div
                 className="
                   flex
                   items-center
-                  justify-between
+                  justify-end
                   mb-4
                 "
               >
-                <span
-                  className="
-                    text-xs
-                    font-body
-                    text-white/30
-                    tracking-widest
-                  "
-                >
-                  {project.number}
-                </span>
-
                 <span
                   className="
                     text-xs
@@ -528,7 +502,7 @@ const WorkSection = () => {
                 className="
                   relative
                   w-full
-                  aspect-[4/3]
+                  aspect-video
                   overflow-hidden
                   mb-8
                 "
