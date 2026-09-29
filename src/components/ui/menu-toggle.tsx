@@ -1,5 +1,3 @@
-import React from "react";
-
 type MenuToggleProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
