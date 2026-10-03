@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import gsap from "gsap";
 import { Observer } from "gsap/Observer";
 import { projects } from "../data/projects";
+import SEO from "../components/SEO";
 
 gsap.registerPlugin(Observer);
 
@@ -627,6 +628,13 @@ const ProjectPage = () => {
         noise
       "
     >
+      <SEO
+        title="Works — Jeet Madhvani"
+        description={project.description}
+        image={`https://jeetmadhvani.vercel.app${project.image}`}
+        url={`https://jeetmadhvani.vercel.app/work/${slug}`}
+      />
+
       {/* ================================================== */}
       {/* HEADER */}
       {/* ================================================== */}
