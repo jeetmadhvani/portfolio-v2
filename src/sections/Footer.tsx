@@ -224,7 +224,7 @@ const Footer = () => {
             {/* EMAIL */}
 
             <SectionCTA
-              text="jeetmadhvani@gmail.com"
+              text="Say Hello ↗"
               href="mailto:jeetmadhvani.work@gmail.com"
               className="
                 text-[clamp(16px,2vw,24px)]
