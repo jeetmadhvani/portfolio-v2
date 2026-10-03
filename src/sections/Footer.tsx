@@ -238,7 +238,7 @@ const Footer = () => {
             <div className="grid grid-cols-1 md:grid-cols-2">
               <SectionCTA
                 text="LinkedIn"
-                href="https://www.linkedin.com"
+                href="https://www.linkedin.com/in/jeetmadhvani/"
                 targetBlank
                 className="
                   text-[clamp(16px,2vw,24px)]
@@ -251,7 +251,7 @@ const Footer = () => {
 
               <SectionCTA
                 text="GitHub"
-                href="https://github.com"
+                href="https://github.com/jeetmadhvani"
                 targetBlank
                 className="
                   text-[clamp(16px,2vw,24px)]
