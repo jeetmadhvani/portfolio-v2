@@ -7,6 +7,7 @@ import WorkSection from "../sections/WorkSection";
 import Footer from "../sections/Footer";
 import Hero from "../sections/Hero";
 import Intro from "../sections/Intro";
+import SEO from "../components/SEO";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -97,12 +98,12 @@ const Home = () => {
       const row = document.createElement("div");
 
       row.style.cssText = `
-  flex: 1;
-  width: 100%;
-  margin-top: -1px;
-  transform: scaleY(0);
-  transform-origin: bottom center;
-`;
+        flex: 1;
+        width: 100%;
+        margin-top: -1px;
+        transform: scaleY(0);
+        transform-origin: bottom center;
+      `;
 
       container.appendChild(row);
       rows.push(row);
@@ -116,7 +117,10 @@ const Home = () => {
 
     const triggers: ScrollTrigger[] = [];
 
-    const triggerTransition = (bg: string, direction: "down" | "up") => {
+    const triggerTransition = (
+      bg: string,
+      direction: "down" | "up",
+    ) => {
       if (bg === currentBg) return;
 
       currentBg = bg;
@@ -129,7 +133,10 @@ const Home = () => {
 
       gsap.set(rows, {
         scaleY: 0,
-        transformOrigin: direction === "down" ? "bottom center" : "top center",
+        transformOrigin:
+          direction === "down"
+            ? "bottom center"
+            : "top center",
       });
 
       transitionTimeline = gsap.timeline({
@@ -151,7 +158,10 @@ const Home = () => {
           })
           .call(() => {
             document.body.style.backgroundColor = bg;
-            document.body.style.setProperty("--current-bg", bg);
+            document.body.style.setProperty(
+              "--current-bg",
+              bg,
+            );
           })
           .to(rows, {
             scaleY: 0,
@@ -180,7 +190,10 @@ const Home = () => {
           })
           .call(() => {
             document.body.style.backgroundColor = bg;
-            document.body.style.setProperty("--current-bg", bg);
+            document.body.style.setProperty(
+              "--current-bg",
+              bg,
+            );
           })
           .to(rows, {
             scaleY: 0,
@@ -212,13 +225,13 @@ const Home = () => {
     const navContainer = document.createElement("div");
 
     navContainer.style.cssText = `
-  position: fixed;
-  inset: -1px 0;
-  z-index: 9999;
-  pointer-events: none;
-  display: flex;
-  flex-direction: column;
-`;
+      position: fixed;
+      inset: -1px 0;
+      z-index: 9999;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+    `;
 
     for (let i = 0; i < ROW_COUNT; i++) {
       const row = document.createElement("div");
@@ -242,26 +255,28 @@ const Home = () => {
     const handleNavTransition = (event: Event) => {
       if (navBusy) return;
 
-      const customEvent = event as CustomEvent<{ id: string }>;
+      const customEvent =
+        event as CustomEvent<{ id: string }>;
 
       const { id } = customEvent.detail;
 
       if (!id) return;
 
-      const target = document.querySelector<HTMLElement>(id);
+      const target =
+        document.querySelector<HTMLElement>(id);
 
       if (!target) return;
 
       navBusy = true;
       navTimeline?.kill();
 
-      const bg = target.dataset.bg || INITIAL_BG;
+      const bg =
+        target.dataset.bg || INITIAL_BG;
 
       navRows.forEach((row) => {
         row.style.backgroundColor = bg;
       });
 
-      // Start completely open
       gsap.set(navRows, {
         scaleY: 0,
         transformOrigin: "bottom center",
@@ -269,7 +284,6 @@ const Home = () => {
 
       navTimeline = gsap.timeline();
 
-      // CLOSE THE SCREEN
       navTimeline.to(navRows, {
         scaleY: 1,
         duration: 0.9,
@@ -279,26 +293,30 @@ const Home = () => {
           from: "end",
         },
 
-        // NOTHING moves before this finishes
         onComplete: () => {
-          // Wait until the screen is fully covered
           setTimeout(() => {
-            const targetY = target.getBoundingClientRect().top + window.scrollY;
+            const targetY =
+              target.getBoundingClientRect().top +
+              window.scrollY;
 
             window.scrollTo({
               top: targetY,
               behavior: "auto",
             });
 
-            document.body.style.backgroundColor = bg;
-            document.body.style.setProperty("--current-bg", bg);
+            document.body.style.backgroundColor =
+              bg;
+
+            document.body.style.setProperty(
+              "--current-bg",
+              bg,
+            );
 
             ScrollTrigger.refresh();
           }, 650);
         },
       });
 
-      // Keep everything covered while the new position settles
       navTimeline.to(
         {},
         {
@@ -306,7 +324,6 @@ const Home = () => {
         },
       );
 
-      // OPEN THE SCREEN
       navTimeline.to(navRows, {
         scaleY: 0,
         transformOrigin: "top center",
@@ -328,7 +345,10 @@ const Home = () => {
       });
     };
 
-    window.addEventListener("portfolio-nav-transition", handleNavTransition);
+    window.addEventListener(
+      "portfolio-nav-transition",
+      handleNavTransition,
+    );
 
     /*
      * ==================================================
@@ -342,7 +362,10 @@ const Home = () => {
       if (!bg) return;
 
       const prevBg =
-        index === 0 ? INITIAL_BG : sections[index - 1].dataset.bg || INITIAL_BG;
+        index === 0
+          ? INITIAL_BG
+          : sections[index - 1].dataset.bg ||
+            INITIAL_BG;
 
       if (bg === prevBg) return;
 
@@ -398,32 +421,44 @@ const Home = () => {
       container.remove();
       navContainer.remove();
 
-      document.body.style.backgroundColor = INITIAL_BG;
+      document.body.style.backgroundColor =
+        INITIAL_BG;
 
-      document.body.style.setProperty("--current-bg", INITIAL_BG);
+      document.body.style.setProperty(
+        "--current-bg",
+        INITIAL_BG,
+      );
     };
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full text-white noise flex flex-col">
-      <div className="relative z-10 flex flex-col pointer-events-none">
-        <Hero data-bg="#500000" />
+    <>
+      <SEO
+        title="Jeet Madhvani — Creative Developer"
+        description="I design and build websites and digital experiences."
+        url="https://jeetmadhvani.vercel.app/"
+      />
 
-        <Intro data-bg="#500000" />
+      <div className="relative min-h-screen w-full text-white noise flex flex-col">
+        <div className="relative z-10 flex flex-col pointer-events-none">
+          <Hero data-bg="#500000" />
 
-        <section id="work" data-bg="#0A0A0A">
-          <WorkSection />
-        </section>
+          <Intro data-bg="#500000" />
 
-        <section id="about" data-bg="#0A0A0A">
-          <AboutSection />
-        </section>
+          <section id="work" data-bg="#0A0A0A">
+            <WorkSection />
+          </section>
 
-        <section id="contact" data-bg="#500000">
-          <Footer />
-        </section>
+          <section id="about" data-bg="#0A0A0A">
+            <AboutSection />
+          </section>
+
+          <section id="contact" data-bg="#500000">
+            <Footer />
+          </section>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
