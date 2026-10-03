@@ -225,7 +225,7 @@ const Footer = () => {
 
             <SectionCTA
               text="jeetmadhvani@gmail.com"
-              href="mailto:jeetmadhvani@gmail.com"
+              href="mailto:jeetmadhvani.work@gmail.com"
               className="
                 text-[clamp(16px,2vw,24px)]
                 py-4
