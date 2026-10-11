@@ -78,7 +78,7 @@ const AboutSection = () => {
       {/* LABEL */}
       <div className="col-span-1">
         <span className="text-xs font-body opacity-50 tracking-widest uppercase">
-          03 — About Me
+          03 - About Me
         </span>
       </div>
 

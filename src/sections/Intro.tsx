@@ -17,7 +17,7 @@ const Intro = () => {
       {/* Section label */}
       <div className="col-span-1">
         <span className="text-xs font-body opacity-50 tracking-widest uppercase">
-          01 — INTRO
+          01 - INTRO
         </span>
       </div>
 

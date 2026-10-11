@@ -228,7 +228,7 @@ const WorkSection = () => {
               uppercase
             "
           >
-            02 — Work
+            02 - Work
           </span>
         </div>
 

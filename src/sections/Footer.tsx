@@ -155,7 +155,7 @@ const Footer = () => {
               uppercase
             "
           >
-            04 — Contact
+            04 - Contact
           </span>
         </div>
 

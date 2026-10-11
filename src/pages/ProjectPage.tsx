@@ -629,7 +629,7 @@ const ProjectPage = () => {
       "
     >
       <SEO
-        title="Works — Jeet Madhvani"
+        title="Works - Jeet Madhvani"
         description={project.description}
         image={`https://jeetmadhvani.vercel.app${project.image}`}
         url={`https://jeetmadhvani.vercel.app/work/${slug}`}

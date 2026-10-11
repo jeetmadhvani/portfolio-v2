@@ -434,7 +434,7 @@ const Home = () => {
   return (
     <>
       <SEO
-        title="Jeet Madhvani — Creative Developer"
+        title="Jeet Madhvani - Creative Developer"
         description="I design and build websites and digital experiences."
         url="https://jeetmadhvani.vercel.app/"
       />
